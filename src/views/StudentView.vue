@@ -4,7 +4,7 @@
       <template #header>
         <div class="card-header">
           <span>学生信息列表</span>
-          <el-button type="primary" @click="handleAdd">新增学生</el-button>
+          <el-button v-permission="'student:add'" type="primary" @click="handleAdd">新增学生</el-button>
         </div>
       </template>
 
@@ -18,8 +18,8 @@
         <el-table-column prop="enrollmentYear" label="入学年份" width="120" />
         <el-table-column label="操作" width="150" fixed="right">
           <template #default="{ row }">
-            <el-button link type="primary" size="small" @click="handleEdit(row)">编辑</el-button>
-            <el-button link type="danger" size="small" @click="handleDelete(row)">删除</el-button>
+            <el-button v-permission="'student:edit'" link type="primary" size="small" @click="handleEdit(row)">编辑</el-button>
+            <el-button v-permission="'student:delete'" link type="danger" size="small" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
