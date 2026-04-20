@@ -76,7 +76,7 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   const userStore = useUserStore()
 
   // 设置页面标题
@@ -84,24 +84,21 @@ router.beforeEach((to, from, next) => {
 
   // 公开页面直接放行
   if (to.meta.public) {
-    next()
-    return
+    return true
   }
 
   // 未登录跳登录页
   if (!userStore.isLoggedIn) {
-    next('/login')
-    return
+    return '/login'
   }
 
   // 检查菜单权限
   const menuCode = to.meta.menu as string
   if (menuCode && !userStore.checkMenu(menuCode)) {
-    next('/')
-    return
+    return '/'
   }
 
-  next()
+  return true
 })
 
 export default router

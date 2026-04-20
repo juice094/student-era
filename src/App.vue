@@ -1,7 +1,5 @@
 <template>
-  <AppLayout v-if="!isLoginPage">
-    <RouterView />
-  </AppLayout>
+  <AppLayout v-if="!isLoginPage" />
   <RouterView v-else />
 </template>
 

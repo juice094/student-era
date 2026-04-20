@@ -43,7 +43,7 @@
           <div class="eval-label">{{ item.label }}</div>
           <el-rate v-model="item.score" disabled show-score :max="5" />
           <div class="eval-bar">
-            <el-progress :percentage="(item.score / 5) * 100" :color="item.score >= 4 ? '#67c23a' : item.score >= 3 ? '#e6a23c' : '#f56c6c'" />
+            <el-progress :percentage="Math.round((item.score / 5) * 100)" :color="item.score >= 4 ? '#67c23a' : item.score >= 3 ? '#e6a23c' : '#f56c6c'" />
           </div>
         </div>
         <el-divider />
