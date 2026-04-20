@@ -7,9 +7,9 @@ export const ROLE_NAMES: Record<UserRole, string> = {
 }
 
 export const MENU_PERMISSIONS: Record<UserRole, string[]> = {
-  admin: ['Home', 'Student', 'Teacher', 'Course', 'Score', 'Dict', 'Log', 'About'],
-  teacher: ['Home', 'Student', 'Teacher', 'Course', 'Score', 'About'],
-  student: ['Home', 'Course', 'Score', 'About']
+  admin: ['Home', 'Student', 'Teacher', 'Course', 'Score', 'CourseSelect', 'Schedule', 'Evaluation', 'OperationLog', 'About'],
+  teacher: ['Home', 'Student', 'Teacher', 'Course', 'Score', 'Evaluation', 'About'],
+  student: ['Home', 'Course', 'Score', 'CourseSelect', 'Evaluation', 'About']
 }
 
 export const BUTTON_PERMISSIONS: Record<string, string[]> = {
@@ -25,7 +25,11 @@ export const BUTTON_PERMISSIONS: Record<string, string[]> = {
   'score:enter': ['admin', 'teacher'],
   'score:audit': ['admin'],
   'course:arrange': ['admin'],
-  'dict:manage': ['admin']
+  'course:select': ['student'],
+  'dict:manage': ['admin'],
+  'evaluation:view': ['admin', 'teacher'],
+  'schedule:manage': ['admin'],
+  'log:view': ['admin']
 }
 
 export function hasRole(role: UserRole, requiredRoles: UserRole[]): boolean {

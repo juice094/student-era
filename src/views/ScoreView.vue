@@ -31,6 +31,7 @@
           <el-select v-model="filterCourseId" placeholder="筛选课程" clearable style="width: 180px" @change="handleFilterChange">
             <el-option v-for="c in courseStore.courses" :key="c.id" :label="c.name" :value="c.id" />
           </el-select>
+          <el-button type="success" plain @click="handleExport">导出Excel</el-button>
           <el-button v-permission="'score:enter'" type="primary" @click="handleAdd">录入成绩</el-button>
         </div>
       </div>
@@ -103,6 +104,7 @@ import ChartPanel from '@/components/ChartPanel.vue'
 import { useScoreStore } from '@/stores/score'
 import { useStudentStore } from '@/stores/student'
 import { useCourseStore } from '@/stores/course'
+import { exportToExcel } from '@/utils/export'
 import type { Score } from '@/types/score'
 
 const scoreStore = useScoreStore()
@@ -230,6 +232,13 @@ function handleSubmit() {
   updateChartOptions()
   ElMessage.success(isEdit.value ? '编辑成功' : '录入成功')
   dialogVisible.value = false
+}
+
+function handleExport() {
+  exportToExcel(filteredScores.value, '成绩信息表', {
+    studentNo: '学号', studentName: '姓名', courseName: '课程', semester: '学期',
+    usualScore: '平时', midtermScore: '期中', finalScore: '期末', totalScore: '总评', gpa: '绩点'
+  })
 }
 
 function handleDelete(row: Score) {

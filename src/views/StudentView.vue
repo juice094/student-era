@@ -4,7 +4,13 @@
       <template #header>
         <div class="card-header">
           <span>学生信息列表</span>
-          <el-button v-permission="'student:add'" type="primary" @click="handleAdd">新增学生</el-button>
+          <div>
+            <el-upload :auto-upload="false" :show-file-list="false" @change="handleImport" style="display:inline-block; margin-right:8px">
+              <el-button type="warning" plain>导入Excel</el-button>
+            </el-upload>
+            <el-button type="success" plain @click="handleExport">导出Excel</el-button>
+            <el-button v-permission="'student:add'" type="primary" @click="handleAdd">新增学生</el-button>
+          </div>
         </div>
       </template>
 
@@ -65,6 +71,7 @@ import { ElMessageBox, ElNotification } from 'element-plus'
 import ChartPanel from '@/components/ChartPanel.vue'
 import StudentFormDialog from '@/components/StudentFormDialog.vue'
 import { useStudentStore } from '@/stores/student'
+import { exportToExcel, readExcelFile } from '@/utils/export'
 import type { Student } from '@/types'
 
 const studentStore = useStudentStore()
@@ -163,6 +170,45 @@ function handleFormSubmit(data: Student) {
       return
     }
     studentStore.students.push({ ...data })
+  }
+}
+
+function handleExport() {
+  exportToExcel(studentStore.students, '学生信息表', {
+    id: '学号', name: '姓名', gender: '性别', age: '年龄',
+    major: '专业', grade: '年级', enrollmentYear: '入学年份'
+  })
+}
+
+async function handleImport(file: any) {
+  try {
+    const rawFile = file.raw
+    const data = await readExcelFile(rawFile)
+    let count = 0
+    for (const row of data) {
+      const id = Number(row['学号'] || row['id'])
+      if (!id) continue
+      const exists = studentStore.students.find((s) => s.id === id)
+      const student: Student = {
+        id,
+        name: String(row['姓名'] || row['name'] || ''),
+        gender: String(row['性别'] || row['gender'] || '男'),
+        age: Number(row['年龄'] || row['age'] || 20),
+        major: String(row['专业'] || row['major'] || ''),
+        grade: String(row['年级'] || row['grade'] || '大一'),
+        enrollmentYear: Number(row['入学年份'] || row['enrollmentYear'] || new Date().getFullYear())
+      }
+      if (exists) {
+        const idx = studentStore.students.findIndex((s) => s.id === id)
+        studentStore.students[idx] = student
+      } else {
+        studentStore.students.push(student)
+        count++
+      }
+    }
+    ElNotification({ title: '导入成功', message: `共导入/更新 ${data.length} 条记录，新增 ${count} 条`, type: 'success' })
+  } catch (err) {
+    ElNotification({ title: '导入失败', message: '请检查 Excel 文件格式', type: 'error' })
   }
 }
 

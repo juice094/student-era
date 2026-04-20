@@ -94,6 +94,10 @@ const allMenus = [
   { path: '/teacher', title: '教师管理', icon: 'UserFilled', code: 'Teacher' },
   { path: '/course', title: '课程管理', icon: 'Reading', code: 'Course' },
   { path: '/score', title: '成绩管理', icon: 'TrendCharts', code: 'Score' },
+  { path: '/course-select', title: '学生选课', icon: 'Plus', code: 'CourseSelect' },
+  { path: '/schedule', title: '排课管理', icon: 'Calendar', code: 'Schedule' },
+  { path: '/evaluation', title: '评教结果', icon: 'Star', code: 'Evaluation' },
+  { path: '/operation-log', title: '操作日志', icon: 'Document', code: 'OperationLog' },
   { path: '/about', title: '关于系统', icon: 'InfoFilled', code: 'About' }
 ]
 

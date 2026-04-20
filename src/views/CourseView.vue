@@ -4,7 +4,13 @@
       <template #header>
         <div class="card-header">
           <span>课程信息列表</span>
-          <el-button v-permission="'course:add'" type="primary" @click="handleAdd">新增课程</el-button>
+          <div>
+            <el-upload :auto-upload="false" :show-file-list="false" @change="handleImport" style="display:inline-block; margin-right:8px">
+              <el-button type="warning" plain>导入Excel</el-button>
+            </el-upload>
+            <el-button type="success" plain @click="handleExport">导出Excel</el-button>
+            <el-button v-permission="'course:add'" type="primary" @click="handleAdd">新增课程</el-button>
+          </div>
         </div>
       </template>
 
@@ -65,6 +71,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { useCourseStore } from '@/stores/course'
 import { useTeacherStore } from '@/stores/teacher'
 import { useDictStore } from '@/stores/dict'
+import { exportToExcel, readExcelFile } from '@/utils/export'
 import type { Course } from '@/types/course'
 
 const courseStore = useCourseStore()
@@ -108,6 +115,45 @@ function handleSubmit() {
 
   ElMessage.success(isEdit.value ? '编辑成功' : '新增成功')
   dialogVisible.value = false
+}
+
+function handleExport() {
+  exportToExcel(courseStore.courses, '课程信息表', {
+    courseNo: '课程号', name: '课程名称', credit: '学分', hours: '学时',
+    type: '类型', collegeName: '开课学院', teacherName: '授课教师', semester: '学期'
+  })
+}
+
+async function handleImport(file: any) {
+  try {
+    const rawFile = file.raw
+    const data = await readExcelFile(rawFile)
+    let count = 0
+    for (const row of data) {
+      const courseNo = String(row['课程号'] || row['courseNo'] || '')
+      if (!courseNo) continue
+      const exists = courseStore.courses.find((c) => c.courseNo === courseNo)
+      const course: Course = {
+        id: exists ? exists.id : Date.now() + count,
+        courseNo,
+        name: String(row['课程名称'] || row['name'] || ''),
+        credit: Number(row['学分'] || row['credit'] || 2),
+        hours: Number(row['学时'] || row['hours'] || 32),
+        type: String(row['类型'] || row['type'] || '必修') as any,
+        collegeId: 1,
+        collegeName: String(row['开课学院'] || row['collegeName'] || ''),
+        teacherName: String(row['授课教师'] || row['teacherName'] || ''),
+        semester: String(row['学期'] || row['semester'] || '2024-2025-1'),
+        maxStudents: Number(row['容量'] || row['maxStudents'] || 100),
+        description: ''
+      }
+      if (exists) courseStore.updateCourse(course)
+      else { courseStore.addCourse(course); count++ }
+    }
+    ElMessage.success(`导入成功，新增 ${count} 条课程`)
+  } catch (err) {
+    ElMessage.error('导入失败，请检查 Excel 格式')
+  }
 }
 
 function handleDelete(row: Course) {

@@ -40,6 +40,30 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '成绩管理', icon: 'TrendCharts', menu: 'Score' }
   },
   {
+    path: '/course-select',
+    name: 'CourseSelect',
+    component: () => import('@/views/CourseSelectView.vue'),
+    meta: { title: '学生选课', icon: 'Plus', menu: 'CourseSelect' }
+  },
+  {
+    path: '/schedule',
+    name: 'Schedule',
+    component: () => import('@/views/ScheduleView.vue'),
+    meta: { title: '排课管理', icon: 'Calendar', menu: 'Schedule' }
+  },
+  {
+    path: '/evaluation',
+    name: 'Evaluation',
+    component: () => import('@/views/EvaluationView.vue'),
+    meta: { title: '评教结果', icon: 'Star', menu: 'Evaluation' }
+  },
+  {
+    path: '/operation-log',
+    name: 'OperationLog',
+    component: () => import('@/views/OperationLogView.vue'),
+    meta: { title: '操作日志', icon: 'Document', menu: 'OperationLog' }
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import('@/views/AboutView.vue'),
