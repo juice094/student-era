@@ -1,0 +1,14 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.validate": ["javascript", "typescript", "vue"],
+  "eslint.useFlatConfig": true,
+  "vue.autoInsert.dotValue": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "files.associations": {
+    "*.scss": "scss"
+  }
+}
