@@ -92,6 +92,9 @@ const roleName = computed(() => {
 const allMenus = [
   { path: '/', title: '首页概览', icon: 'HomeFilled', code: 'Home' },
   { path: '/student', title: '学生管理', icon: 'UserFilled', code: 'Student' },
+  { path: '/teacher', title: '教师管理', icon: 'UserFilled', code: 'Teacher' },
+  { path: '/course', title: '课程管理', icon: 'Reading', code: 'Course' },
+  { path: '/score', title: '成绩管理', icon: 'TrendCharts', code: 'Score' },
   { path: '/about', title: '关于系统', icon: 'InfoFilled', code: 'About' }
 ]
 

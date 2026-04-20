@@ -22,6 +22,24 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '学生管理', icon: 'UserFilled', menu: 'Student' }
   },
   {
+    path: '/teacher',
+    name: 'Teacher',
+    component: () => import('@/views/TeacherView.vue'),
+    meta: { title: '教师管理', icon: 'UserFilled', menu: 'Teacher' }
+  },
+  {
+    path: '/course',
+    name: 'Course',
+    component: () => import('@/views/CourseView.vue'),
+    meta: { title: '课程管理', icon: 'Reading', menu: 'Course' }
+  },
+  {
+    path: '/score',
+    name: 'Score',
+    component: () => import('@/views/ScoreView.vue'),
+    meta: { title: '成绩管理', icon: 'TrendCharts', menu: 'Score' }
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import('@/views/AboutView.vue'),

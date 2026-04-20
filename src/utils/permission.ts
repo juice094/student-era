@@ -8,7 +8,7 @@ export const ROLE_NAMES: Record<UserRole, string> = {
 
 export const MENU_PERMISSIONS: Record<UserRole, string[]> = {
   admin: ['Home', 'Student', 'Teacher', 'Course', 'Score', 'Dict', 'Log', 'About'],
-  teacher: ['Home', 'Student', 'Course', 'Score', 'About'],
+  teacher: ['Home', 'Student', 'Teacher', 'Course', 'Score', 'About'],
   student: ['Home', 'Course', 'Score', 'About']
 }
 
@@ -16,6 +16,12 @@ export const BUTTON_PERMISSIONS: Record<string, string[]> = {
   'student:add': ['admin'],
   'student:edit': ['admin', 'teacher'],
   'student:delete': ['admin'],
+  'teacher:add': ['admin'],
+  'teacher:edit': ['admin'],
+  'teacher:delete': ['admin'],
+  'course:add': ['admin'],
+  'course:edit': ['admin'],
+  'course:delete': ['admin'],
   'score:enter': ['admin', 'teacher'],
   'score:audit': ['admin'],
   'course:arrange': ['admin'],
