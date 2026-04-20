@@ -2,6 +2,9 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { Score, ScoreWeight } from '@/types/score'
 import { DEFAULT_WEIGHT } from '@/types/score'
+import { persist, restore } from '@/utils/persist'
+
+const PERSIST_KEY = 'scores'
 
 function calcTotal(usual: number, midterm: number, final: number, weight: ScoreWeight): number {
   return Number((usual * weight.usual + midterm * weight.midterm + final * weight.final).toFixed(1))
@@ -20,47 +23,54 @@ function calcGpa(total: number): number {
   return 0
 }
 
+function enrichScore(s: Score, w: ScoreWeight): Score {
+  const total = calcTotal(s.usualScore, s.midtermScore, s.finalScore, w)
+  return { ...s, totalScore: total, gpa: calcGpa(total) }
+}
+
+const mockScores: Score[] = [
+  { id: 1, studentId: 2021001, studentName: '张伟', studentNo: '2021001', courseId: 1, courseName: '计算机导论', semester: '2024-2025-1', usualScore: 85, midtermScore: 78, finalScore: 88, totalScore: 84.1, gpa: 3.3, status: 'normal' },
+  { id: 2, studentId: 2021002, studentName: '李娜', studentNo: '2021002', courseId: 1, courseName: '计算机导论', semester: '2024-2025-1', usualScore: 90, midtermScore: 85, finalScore: 92, totalScore: 89.5, gpa: 4.0, status: 'normal' },
+  { id: 3, studentId: 2021003, studentName: '王强', studentNo: '2021003', courseId: 2, courseName: '数据结构', semester: '2024-2025-1', usualScore: 70, midtermScore: 65, finalScore: 72, totalScore: 69.6, gpa: 2.0, status: 'normal' },
+  { id: 4, studentId: 2022001, studentName: '刘洋', studentNo: '2022001', courseId: 4, courseName: '经济学原理', semester: '2024-2025-1', usualScore: 88, midtermScore: 90, finalScore: 85, totalScore: 87.4, gpa: 3.7, status: 'normal' },
+  { id: 5, studentId: 2023001, studentName: '赵雪', studentNo: '2023001', courseId: 1, courseName: '计算机导论', semester: '2024-2025-1', usualScore: 60, midtermScore: 55, finalScore: 58, totalScore: 57.5, gpa: 0, status: 'normal' }
+]
+
 export const useScoreStore = defineStore('score', () => {
   const scores = ref<Score[]>([])
   const weight = ref<ScoreWeight>({ ...DEFAULT_WEIGHT })
 
-  const mockScores: Score[] = [
-    { id: 1, studentId: 2021001, studentName: '张伟', studentNo: '2021001', courseId: 1, courseName: '计算机导论', semester: '2024-2025-1', usualScore: 85, midtermScore: 78, finalScore: 88, totalScore: 84.1, gpa: 3.3, status: 'normal' },
-    { id: 2, studentId: 2021002, studentName: '李娜', studentNo: '2021002', courseId: 1, courseName: '计算机导论', semester: '2024-2025-1', usualScore: 90, midtermScore: 85, finalScore: 92, totalScore: 89.5, gpa: 4.0, status: 'normal' },
-    { id: 3, studentId: 2021003, studentName: '王强', studentNo: '2021003', courseId: 2, courseName: '数据结构', semester: '2024-2025-1', usualScore: 70, midtermScore: 65, finalScore: 72, totalScore: 69.6, gpa: 2.0, status: 'normal' },
-    { id: 4, studentId: 2022001, studentName: '刘洋', studentNo: '2022001', courseId: 4, courseName: '经济学原理', semester: '2024-2025-1', usualScore: 88, midtermScore: 90, finalScore: 85, totalScore: 87.4, gpa: 3.7, status: 'normal' },
-    { id: 5, studentId: 2023001, studentName: '赵雪', studentNo: '2023001', courseId: 1, courseName: '计算机导论', semester: '2024-2025-1', usualScore: 60, midtermScore: 55, finalScore: 58, totalScore: 57.5, gpa: 0, status: 'normal' }
-  ]
-
   function loadScores() {
     if (scores.value.length === 0) {
-      scores.value = mockScores.map((s) => ({ ...s, totalScore: calcTotal(s.usualScore, s.midtermScore, s.finalScore, weight.value), gpa: calcGpa(calcTotal(s.usualScore, s.midtermScore, s.finalScore, weight.value)) }))
+      const restored = restore<Score[]>(PERSIST_KEY, mockScores)
+      scores.value = restored.map((s) => enrichScore(s, weight.value))
     }
   }
 
   function recalcAll() {
-    scores.value = scores.value.map((s) => {
-      const total = calcTotal(s.usualScore, s.midtermScore, s.finalScore, weight.value)
-      return { ...s, totalScore: total, gpa: calcGpa(total) }
-    })
+    scores.value = scores.value.map((s) => enrichScore(s, weight.value))
+    persist(PERSIST_KEY, scores.value)
   }
 
   function addScore(s: Score) {
-    const total = calcTotal(s.usualScore, s.midtermScore, s.finalScore, weight.value)
-    scores.value.push({ ...s, totalScore: total, gpa: calcGpa(total) })
+    scores.value.push(enrichScore(s, weight.value))
+    persist(PERSIST_KEY, scores.value)
   }
 
   function updateScore(s: Score) {
     const idx = scores.value.findIndex((item) => item.id === s.id)
     if (idx !== -1) {
-      const total = calcTotal(s.usualScore, s.midtermScore, s.finalScore, weight.value)
-      scores.value[idx] = { ...s, totalScore: total, gpa: calcGpa(total) }
+      scores.value[idx] = enrichScore(s, weight.value)
+      persist(PERSIST_KEY, scores.value)
     }
   }
 
   function deleteScore(id: number) {
     const idx = scores.value.findIndex((item) => item.id === id)
-    if (idx !== -1) scores.value.splice(idx, 1)
+    if (idx !== -1) {
+      scores.value.splice(idx, 1)
+      persist(PERSIST_KEY, scores.value)
+    }
   }
 
   // 统计
