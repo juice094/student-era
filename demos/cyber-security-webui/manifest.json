@@ -1,0 +1,13 @@
+{
+  "name": "宏病毒演示 · 组别3",
+  "short_name": "宏病毒演示",
+  "description": "翻转课堂：宏病毒感染场景与清除技巧交互式演示",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#ff6b6b",
+  "icons": [
+    {"src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%23ff6b6b' width='192' height='192' rx='24'/%3E%3Ctext x='96' y='120' text-anchor='middle' fill='%23fff' font-size='96'%3E%F0%9F%9B%A1%3C/text%3E%3C/svg%3E", "sizes": "192x192", "type": "image/svg+xml"},
+    {"src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect fill='%23ff6b6b' width='512' height='512' rx='64'/%3E%3Ctext x='256' y='320' text-anchor='middle' fill='%23fff' font-size='256'%3E%F0%9F%9B%A1%3C/text%3E%3C/svg%3E", "sizes": "512x512", "type": "image/svg+xml"}
+  ]
+}

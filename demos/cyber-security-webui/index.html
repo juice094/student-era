@@ -1,0 +1,492 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宏病毒 · 感染场景与清除技巧 | 课堂演示</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+
+<nav class="nav" id="navbar">
+  <div class="nav-brand">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    MacroVirus-Lab
+  </div>
+  <div class="nav-links">
+    <a href="#definition">核心定义</a>
+    <a href="#spread">传播途径</a>
+    <a href="#attack">攻击原理</a>
+    <a href="#infection">感染链路</a>
+    <a href="#detection">检测演示</a>
+    <a href="#cleanup">清除技巧</a>
+    <a href="#timeline">经典案例</a>
+    <a href="#defense">识别实战</a>
+    <a href="#qa">延伸问题</a>
+    <a href="#summary">总结升华</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      课堂演示 · 网络安全专题
+    </div>
+    <h1>宏病毒 · 感染场景<br><span class="gradient-text">与清除技巧</span></h1>
+    <p>从钓鱼邮件到系统感染，从原理剖析到实战清除——以 Office 宏病毒为例，演示恶意代码的完整生命周期与防御方法论。</p>
+    <div class="hero-meta">
+      <span>📧 邮件钓鱼 → 📄 文档感染 → 🛡️ 安全清除</span>
+      <span style="color:var(--border);">|</span>
+      <span>🧪 11 个交互场景</span>
+      <span style="color:var(--border);">|</span>
+      <span>⚠️ 高危文件识别挑战</span>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    <span>向下滚动</span>
+  </div>
+</section>
+
+<section id="definition">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="section-num">1</span>核心定义</h2>
+      <p>宏病毒是利用 Office 宏语言（VBA）编写的恶意代码，寄生在文档或模板中，随文档打开执行。</p>
+    </div>
+    <div class="card fade-in" style="max-width: 720px; margin: 0 auto;">
+      <div style="font-size: 1rem; line-height: 1.8; color: var(--text-secondary);">
+        <p style="margin-bottom: 1rem;"><strong style="color: var(--text);">宏病毒</strong>是利用 Office 宏语言（VBA）编写的恶意代码，寄生在文档或模板中，随文档打开执行，具有<strong>自我复制、感染其他文档及执行恶意操作</strong>的能力。</p>
+        <div class="callout callout-danger">
+          <div class="callout-title">⚠️ 关键特征</div>
+          一旦用户点击"启用内容"，AutoOpen / Document_Open 过程立即执行，病毒获得运行权限。Normal.dotm 全局模板被感染后，所有新建文档都会携带病毒代码。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="spread" style="background: white;">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="section-num">2</span>四大传播途径</h2>
+      <p>宏病毒通过多种渠道扩散，了解传播方式是构建第一道防线的基础。</p>
+    </div>
+    <div class="spread-grid">
+      <div class="spread-card fade-in">
+        <div class="spread-icon">📨</div>
+        <div class="spread-name">邮件附件</div>
+        <div class="spread-desc">最常见的传播方式，钓鱼邮件伪装成发票、简历等诱导打开。</div>
+      </div>
+      <div class="spread-card fade-in">
+        <div class="spread-icon">💾</div>
+        <div class="spread-name">U盘/移动硬盘</div>
+        <div class="spread-desc">插入已感染U盘后，宏病毒通过文档复制扩散，尤其在打印店、会议室等公共场景。</div>
+      </div>
+      <div class="spread-card fade-in">
+        <div class="spread-icon">🌐</div>
+        <div class="spread-name">网络共享</div>
+        <div class="spread-desc">企业局域网共享文件夹中的文档被感染后，所有访问者都面临风险。</div>
+      </div>
+      <div class="spread-card fade-in">
+        <div class="spread-icon">⬇️</div>
+        <div class="spread-name">下载软件</div>
+        <div class="spread-desc">从不明网站下载的 Office 模板或工具文档可能携带宏病毒。</div>
+      </div>
+    </div>
+    <div class="callout callout-warn fade-in" style="margin-top: 1.5rem;">
+      <div class="callout-title">💡 课堂提示</div>
+      在真实攻击中，邮件附件是最主要的初始入侵向量。社会工程学比纯技术更致命——熟人社交链导致指数级爆发。
+    </div>
+  </div>
+</section>
+
+<section id="attack">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="section-num">3</span>攻击原理 · 渐进解析</h2>
+      <p>宏病毒从触发到执行恶意操作的完整攻击链，分为四个阶段。</p>
+    </div>
+    <div class="pipeline">
+      <div class="step-box fade-in">
+        <div class="step-num">1</div>
+        <div class="step-label">AutoOpen 触发</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-box fade-in">
+        <div class="step-num">2</div>
+        <div class="step-label">感染 Normal.dotm</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-box fade-in">
+        <div class="step-num">3</div>
+        <div class="step-label">遍历感染文档</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-box fade-in">
+        <div class="step-num">4</div>
+        <div class="step-label">执行恶意操作</div>
+      </div>
+    </div>
+    <div class="card fade-in" style="margin-top: 2rem;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div>
+          <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: .5rem;">阶段一：AutoOpen 触发</h3>
+          <p style="font-size: .875rem; color: var(--text-secondary); line-height: 1.7;">当用户打开文档并点击"启用内容"后，Office 立即执行 AutoOpen / Document_Open 过程。这是宏病毒的入口点。</p>
+          <div class="code-block">Sub AutoOpen()
+    Application.DisplayAlerts = False
+    Call InfectSystem
+End Sub</div>
+        </div>
+        <div>
+          <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: .5rem;">阶段二：感染全局模板</h3>
+          <p style="font-size: .875rem; color: var(--text-secondary); line-height: 1.7;">Normal.dotm 是 Word 全局模板，所有新建文档都会继承它。病毒将自身代码复制到这里，实现"一次感染，终生带毒"。</p>
+          <div class="code-block">Set nt = Application.NormalTemplate
+nt.VBProject.VBComponents("ThisDocument").CodeModule _
+    .AddFromString Me.CodeModule.Lines(1, 100)</div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+        <div>
+          <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: .5rem;">阶段三：遍历感染文档</h3>
+          <p style="font-size: .875rem; color: var(--text-secondary); line-height: 1.7;">病毒扫描最近打开的文件列表、桌面、文档目录，将自身注入到其他 Office 文档中，实现横向扩散。</p>
+          <div class="code-block">For Each doc In RecentFiles
+    If doc.Path <> "" Then
+        InfectDocument doc.Path
+    End If
+Next doc</div>
+        </div>
+        <div>
+          <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: .5rem;">阶段四：执行恶意操作</h3>
+          <p style="font-size: .875rem; color: var(--text-secondary); line-height: 1.7;">最终阶段：下载后门、加密文件、窃取凭证，或启动隐藏的 PowerShell 连接远程服务器。</p>
+          <div class="code-block">x = "powershell -enc ..."
+Shell x, vbHide</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="infection" style="background: white;">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="section-num">4</span>感染链路 · 完整模拟</h2>
+      <p>从钓鱼邮件送达，到全网横向扩散的完整感染链条。</p>
+    </div>
+    <div class="chain-container">
+      <div class="chain-node fade-in">
+        <div class="icon">📧</div>
+        <div class="label">钓鱼邮件</div>
+      </div>
+      <div class="chain-connector">→</div>
+      <div class="chain-node fade-in">
+        <div class="icon">👤</div>
+        <div class="label">用户点击</div>
+      </div>
+      <div class="chain-connector">→</div>
+      <div class="chain-node fade-in">
+        <div class="icon">📄</div>
+        <div class="label">启用宏</div>
+      </div>
+      <div class="chain-connector">→</div>
+      <div class="chain-node fade-in">
+        <div class="icon">💻</div>
+        <div class="label">系统感染</div>
+      </div>
+      <div class="chain-connector">→</div>
+      <div class="chain-node fade-in">
+        <div class="icon">🌐</div>
+        <div class="label">横向扩散</div>
+      </div>
+    </div>
+    <div class="callout callout-danger fade-in" style="margin-top: 2rem;">
+      <div class="callout-title">⚠️ 模拟场景</div>
+      周一早晨 9:03，财务小李的 Outlook 收到了一封来自 finance@invoice-center.com 的邮件，主题为"【紧急】2025年Q1发票确认通知"。附件"发票清单.docm"是一个携带宏病毒的恶意文档。小李点击打开后，安全警告被绕过，宏被启用，病毒随即写入 Normal.dotm 全局模板，并开始遍历感染其他文档，最终通过邮件和共享文件夹向全网扩散。
+    </div>
+  </div>
+</section>
+
+<section id="detection">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="section-num">5</span>oletools 实时检测</h2>
+      <p>使用开源工具 olevba 对可疑文档进行静态分析，提取宏源码并评估风险等级。</p>
+    </div>
+    <div class="scanner-card fade-in">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+        <div>
+          <div style="font-size: 1rem; font-weight: 700;">风险评级：🔴 CRITICAL</div>
+          <div style="font-size: .8125rem; color: var(--text-muted);">文件名：发票清单.docm | 类型：OpenXML</div>
+        </div>
+        <span class="badge badge-red">MALICIOUS</span>
+      </div>
+      <div class="code-block">AutoExec   │ AutoOpen      │ 打开即执行
+Suspicious │ Shell         │ 执行系统命令
+Suspicious │ vbHide        │ 隐藏执行窗口
+Suspicious │ powershell    │ 投递 PowerShell
+IOC        │ 192.168.1.100 │ 外部 C2 地址
+Encode     │ Base64        │ 命令编码混淆
+─────────────────────────────────────
+MacroRaptor: MALICIOUS (AutoExec ∧ Execute)</div>
+      <div style="margin-top: 1rem; font-size: .8125rem; color: var(--text-secondary);">
+        检测结论：该文档包含 AutoOpen 自动执行宏，调用 Shell 隐藏启动 PowerShell 并连接远程服务器，符合 MacroRaptor 恶意宏判定规则。
+      </div>
+    </div>
+    <div class="card fade-in" style="margin-top: 1.5rem;">
+      <div style="font-size: .875rem; line-height: 1.7; color: var(--text-secondary);">
+        <strong style="color: var(--text);">检测要点：</strong>
+        <ul style="margin-top: .5rem; padding-left: 1.25rem;">
+          <li>查找 AutoOpen / Document_Open / AutoClose 等自动触发过程</li>
+          <li>识别 Shell、CreateObject、DownloadString 等危险函数调用</li>
+          <li>检查 Base64 编码、字符串拼接等混淆手段</li>
+          <li>提取网络 IOC（IP、域名、URL）用于威胁情报关联</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cleanup" style="background: white;">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="section-num">6</span>宏病毒清除四步法</h2>
+      <p>从紧急止损到根治清理的完整操作流程。</p>
+    </div>
+    <div class="cleanup-grid">
+      <div class="cleanup-item fade-in">
+        <div class="cleanup-num">1</div>
+        <div class="cleanup-body">
+          <h3>关闭宏</h3>
+          <p>Word 选项 → 信任中心 → 宏设置 → <strong>"禁用所有宏，并发出通知"</strong></p>
+        </div>
+      </div>
+      <div class="cleanup-item fade-in">
+        <div class="cleanup-num">2</div>
+        <div class="cleanup-body">
+          <h3>重置模板</h3>
+          <p>删除 <code>%AppData%\Microsoft\Templates\Normal.dotm</code>，重启 Word 自动生成干净模板</p>
+        </div>
+      </div>
+      <div class="cleanup-item fade-in">
+        <div class="cleanup-num">3</div>
+        <div class="cleanup-body">
+          <h3>审查文档</h3>
+          <p>用 <code>olevba</code> 批量提取宏源码，删除可疑模块或另存为 .docx（新版格式默认不保存宏）</p>
+        </div>
+      </div>
+      <div class="cleanup-item fade-in">
+        <div class="cleanup-num">4</div>
+        <div class="cleanup-body">
+          <h3>升级补丁</h3>
+          <p>保持 Office 和 Windows 更新，修补宏相关安全漏洞。企业环境建议组策略统一禁用宏，邮件网关预扫描附件。</p>
+        </div>
+      </div>
+    </div>
+    <div class="callout callout-success fade-in" style="margin-top: 1.5rem;">
+      <div class="callout-title">💡 企业级建议</div>
+      权限最小化 + 应用白名单 + EDR 行为监控 + 邮件网关预扫描。对于涉及财务、人事等敏感部门的文档，建议强制启用"仅受信任位置"的宏策略。
+    </div>
+  </div>
+</section>
+
+<section id="timeline">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="section-num">7</span>宏病毒史上的标志性案例</h2>
+      <p>从 1995 年 Concept 到现代 APT 攻击，宏病毒的技术演进与防御启示。</p>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-year">1995</div>
+          <div class="timeline-title">Concept · 宏病毒创世神</div>
+          <div class="timeline-desc">
+            第一个将 <strong>VBA</strong> 代码直接嵌入 Word 6.0/7.0 文档流的病毒。利用 <code>Document_Open</code> 事件自动执行，无需用户额外点击。
+            <br><br>
+            突破点：证明文档脚本也能是病毒，开启长达10年的"宏病毒黄金时代"。
+            <br><span class="timeline-tag" style="background:#fee2e2; color:#991b1b;">初代实验 · 证明危险性</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-year">1999</div>
+          <div class="timeline-title">Melissa · 全球邮件恐慌</div>
+          <div class="timeline-desc">
+            伪装成色情网站密码列表 <code>List.doc</code>，利用好奇心驱动。调用 Outlook 读取通讯录，向前50个联系人自动发送带毒邮件。
+            <br><br>
+            教训：社会工程学比纯技术更致命；熟人社交链导致指数级爆发，撑爆微软、英特尔等企业邮件服务器。
+            <br><span class="timeline-tag" style="background:#fef9c3; color:#854d0e;">指数传播 · 社交工程 · DoS</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-year">2000s</div>
+          <div class="timeline-title">美丽杀手 · 定时炸弹</div>
+          <div class="timeline-desc">
+            混入 <strong>CIH 病毒内核逻辑</strong>，严格锁定每月13号且为星期五触发。改写硬盘 MBR、格式化分区、甚至刷写主板 BIOS。
+            <br><br>
+            防御启示：离线备份是唯一救赎（3-2-1备份策略）；必须开启系统时间自动同步与物理校验。
+            <br><span class="timeline-tag" style="background:#fef9c3; color:#854d0e;">CIH融合 · 硬件破坏 · 定时触发</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-year">2020+</div>
+          <div class="timeline-title">现代职场勒索 · APT平民化</div>
+          <div class="timeline-desc">
+            诱饵伪装成"财务通知""中标通知书"，宏代码作为 <strong>Downloader</strong> 连接 C&C 服务器，下载勒索软件与远程控制木马（RAT）。
+            <br><br>
+            企业级防御：权限最小化 + 应用白名单 + EDR行为监控 + 邮件网关预扫描。
+            <br><span class="timeline-tag" style="background:#dcfce7; color:#166534;">鱼叉钓鱼 · RaaS · 多阶段攻击</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="defense" style="background: white;">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="section-num">8</span>实战 · 识别与防御</h2>
+      <p>高危文档识别挑战与中毒症状自查清单。</p>
+    </div>
+    <div class="defense-grid">
+      <div class="defense-panel fade-in">
+        <h3>🎯 高危文档识别挑战</h3>
+        <p class="defense-sub">根据后缀和提示判断风险等级</p>
+        <div class="file-challenge">
+          <div class="file-card" data-safe="false" onclick="checkFile(this)">
+            <div class="file-icon">📄</div>
+            <div class="file-name">工资表.docm</div>
+            <div class="file-verdict hidden"><span class="verdict-danger">高危</span><small>专用宏格式，默认携带宏代码</small></div>
+          </div>
+          <div class="file-card" data-safe="true" onclick="checkFile(this)">
+            <div class="file-icon">📄</div>
+            <div class="file-name">合同.docx</div>
+            <div class="file-verdict hidden"><span class="verdict-safe">安全</span><small>新版格式默认禁用宏</small></div>
+          </div>
+          <div class="file-card" data-safe="false" onclick="checkFile(this)">
+            <div class="file-icon">📄</div>
+            <div class="file-name">简历.doc</div>
+            <div class="file-verdict hidden"><span class="verdict-danger">高危</span><small>旧版格式，宏病毒重灾区</small></div>
+          </div>
+          <div class="file-card" data-safe="false" onclick="checkFile(this)">
+            <div class="file-icon">⚠️</div>
+            <div class="file-name">"请启用宏查看内容"</div>
+            <div class="file-verdict hidden"><span class="verdict-danger">100%病毒</span><small>任何诱导启用宏的提示均为高危信号</small></div>
+          </div>
+          <div class="file-card" data-safe="true" onclick="checkFile(this)">
+            <div class="file-icon">📊</div>
+            <div class="file-name">财务报表.xlsx</div>
+            <div class="file-verdict hidden"><span class="verdict-safe">安全</span><small>新版Excel默认无宏</small></div>
+          </div>
+          <div class="file-card" data-safe="false" onclick="checkFile(this)">
+            <div class="file-icon">📊</div>
+            <div class="file-name">对账表.xlsm</div>
+            <div class="file-verdict hidden"><span class="verdict-danger">高危</span><small>启用宏工作簿，常见钓鱼载体</small></div>
+          </div>
+        </div>
+        <div class="challenge-score" id="challenge-score">已识别 0 / 6</div>
+      </div>
+      <div class="defense-panel fade-in">
+        <h3>🩺 中毒症状自查清单</h3>
+        <p class="defense-sub">勾选你遇到过的现象</p>
+        <div class="symptom-list">
+          <label class="symptom-item" onclick="toggleSymptom(this)"><input type="checkbox"><span>Word 打开变慢、频繁卡死、自动闪退</span></label>
+          <label class="symptom-item" onclick="toggleSymptom(this)"><input type="checkbox"><span>文档莫名乱码、内容丢失、格式错乱</span></label>
+          <label class="symptom-item" onclick="toggleSymptom(this)"><input type="checkbox"><span>关闭时提示"是否保存对 Normal.dotm 的更改"</span></label>
+          <label class="symptom-item" onclick="toggleSymptom(this)"><input type="checkbox"><span>自动弹出奇怪窗口、自动打印、自动弹窗</span></label>
+          <label class="symptom-item" onclick="toggleSymptom(this)"><input type="checkbox"><span>Excel 数据无故错乱、公式消失、表格被篡改</span></label>
+          <label class="symptom-item" onclick="toggleSymptom(this)"><input type="checkbox"><span>电脑自动发送大量带毒邮件</span></label>
+          <label class="symptom-item" onclick="toggleSymptom(this)"><input type="checkbox"><span>文件被加密，弹出勒索要钱窗口</span></label>
+          <label class="symptom-item" onclick="toggleSymptom(this)"><input type="checkbox"><span>Office 安全设置被自动篡改，宏无法关闭</span></label>
+        </div>
+        <div class="symptom-result" id="symptom-result">勾选越多，中毒概率越高。出现第3条则99%确认感染。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="qa">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="section-num">9</span>课堂延伸问题</h2>
+      <p>基于验证结论设计的开放性讨论题，点击展开参考答案。</p>
+    </div>
+    <div class="quiz-container">
+      <div class="quiz-item" tabindex="0" role="button" aria-expanded="false">
+        <div class="quiz-toggle">▼</div>
+        <div class="quiz-question">Q1：宏病毒会变异吗？变异后如何防范？</div>
+        <div class="quiz-answer">
+          <strong>会的。</strong>现代宏病毒大量使用 VBA 混淆、P-Code Stomping、动态下载 Payload 等技术变异。防范不能仅靠特征码，需结合行为检测（如 MacroRaptor）和零信任宏策略。
+        </div>
+      </div>
+      <div class="quiz-item" tabindex="0" role="button" aria-expanded="false">
+        <div class="quiz-toggle">▼</div>
+        <div class="quiz-question">Q2：AI 生成的钓鱼邮件会让宏病毒更难防吗？</div>
+        <div class="quiz-answer">
+          <strong>是的。</strong>AI 使钓鱼邮件的语言更自然、个性化更强，诱导启用宏的成功率可能上升。防御核心不再是"识别假邮件"，而是<strong>"默认不信任文档中的宏"</strong>。
+        </div>
+      </div>
+      <div class="quiz-item" tabindex="0" role="button" aria-expanded="false">
+        <div class="quiz-toggle">▼</div>
+        <div class="quiz-question">Q3：为什么企业组策略禁用宏后，仍有员工中招？</div>
+        <div class="quiz-answer">
+          常见原因包括：① 员工使用个人设备绕过企业策略；② 文档被另存为受信任位置的文件；③ 社会工程学诱导员工手动更改宏设置；④ 利用 Office 已知漏洞绕过宏提示。防御需要<strong>技术+管理+培训</strong>三重措施。
+        </div>
+      </div>
+      <div class="quiz-item" tabindex="0" role="button" aria-expanded="false">
+        <div class="quiz-toggle">▼</div>
+        <div class="quiz-question">Q4：云办公（WPS/Office 365）能否杜绝宏病毒？</div>
+        <div class="quiz-answer">
+          <strong>不能。</strong>云办公虽然增加了沙箱和实时扫描，但宏病毒的核心攻击面（VBA 执行环境）仍然存在。且云文档的协作共享特性反而可能加速病毒传播。关键仍是<strong>最小权限原则</strong>和<strong>用户安全意识</strong>。
+        </div>
+      </div>
+    </div>
+    <div class="teacher-note">
+      课堂建议：Q1-Q2 适合作为"技术演进"辩论的开场；Q3-Q4 适合分组讨论（技术组 vs 管理组）。
+    </div>
+  </div>
+</section>
+
+<section id="summary" style="background: white;">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="section-num">10</span>总结升华</h2>
+      <p>安全意识是最好的杀毒软件。</p>
+    </div>
+    <div class="final-section fade-in">
+      <div class="final-text">
+        <p>不启用不明宏，不打开可疑件；</p>
+        <p>升级补丁要及时，安全意识挂心间。</p>
+      </div>
+      <div class="final-badge">🛡️</div>
+      <div class="callout callout-success" style="max-width: 600px; margin: 2rem auto 0;">
+        <div class="callout-title">📎 核心要点回顾</div>
+        宏病毒利用 Office VBA 自动执行机制，通过钓鱼邮件、U盘、共享文件夹传播。清除需禁用宏→重置模板→审查文档→升级补丁。防御核心是<strong>零信任宏策略</strong>：默认不信任任何文档中的宏代码。
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p class="footer-title">宏病毒 · 感染场景与清除技巧 · 课堂演示版</p>
+    <p>网络安全专题 | 组别3 · 宏病毒演示</p>
+    <p style="margin-top: .75rem; font-size: .75rem; opacity: .5;">生成时间：2026-04-28 | 演示场景：11 个 | 交互组件：6 项</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

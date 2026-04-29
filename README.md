@@ -8,13 +8,15 @@
 
 > A production-ready academic administration dashboard built with Vue 3, Vite, TypeScript, and ECharts. Features data visualization, complete student CRUD operations, form validation, undo-delete, and enterprise-level engineering practices.
 
-This repository is organized as a **pnpm workspace monorepo**, archiving various course design projects from my student years.
+This repository archives various course design projects and classroom demos from my student years.
 
 ## Project Index
 
-| Semester | Course | Project Path | Tech Stack |
-|----------|--------|-------------|------------|
-| 2026 Spring | Big Data Visualization | [`projects/bigdata-visualization`](./projects/bigdata-visualization) | Vue 3 + TypeScript + ECharts + Element Plus |
+| Semester | Course | Type | Path | Tech Stack |
+|----------|--------|------|------|------------|
+| 2026 Spring | Big Data Visualization | Project | [`projects/bigdata-visualization`](./projects/bigdata-visualization) | Vue 3 + TypeScript + ECharts + Element Plus |
+| 2026 Spring | Agricultural Information Technology | Demo | [`demos/agri-kg-demo`](./demos/agri-kg-demo) | HTML5 + CSS3 + Vanilla JS |
+| 2026 Spring | Cyber Security | Demo | [`demos/cyber-security-webui`](./demos/cyber-security-webui) | HTML5 + CSS3 + Vanilla JS + PWA |
 
 ## Quick Start
 
@@ -29,16 +31,23 @@ pnpm dev:visualization
 pnpm build:visualization
 ```
 
-## Workspace Structure
+## Repository Structure
 
 ```
 .
 ├── packages/                   # Shared packages (future extensions)
-├── projects/                   # Course design projects
+├── projects/                   # Build-required course design projects
 │   └── bigdata-visualization/  # Academic admin dashboard with data viz
 │       ├── src/
 │       ├── docs/               # Course design reports
 │       └── dist/               # Build output
+├── demos/                      # Static classroom demos (open index.html directly)
+│   ├── agri-kg-demo/           # Agricultural knowledge graph visualization
+│   └── cyber-security-webui/   # Cyber security Web UI demo
+├── docs/                       # Course design reports archive
+│   ├── 大数据可视化/
+│   ├── 农业信息技术/
+│   └── 网络安全/
 ├── package.json                # Workspace root
 └── pnpm-workspace.yaml
 ```

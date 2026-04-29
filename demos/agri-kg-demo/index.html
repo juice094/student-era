@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农业知识图谱自动构建：技术演进与工程实践 | 课堂演示</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+
+<nav class="nav" id="navbar">
+    <div class="nav-brand">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        AgriKG-Lab
+    </div>
+    <div class="nav-links">
+        <a href="#concepts">核心概念</a>
+        <a href="#timeline">技术演进</a>
+        <a href="#applications">应用现状</a>
+        <a href="#architecture">架构对比</a>
+        <a href="#case">案例实操</a>
+        <a href="#data">数据实证</a>
+        <a href="#security">安全分析</a>
+        <a href="#problems">现存问题</a>
+        <a href="#trends">发展趋势</a>
+        <a href="#maturity">成熟度矩阵</a>
+        <a href="#quiz">课堂互动</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="container">
+        <div class="hero-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            课堂演示 · 农业信息技术专题
+        </div>
+        <h1>基于大语言模型的农业知识图谱<br><span class="gradient-text">自动构建与工程实践</span></h1>
+        <p>从联合抽取到 Agentic 服务的演进路径、技术边界与方法论验证——以小麦纹枯病防治知识图谱为案例</p>
+        <div class="hero-meta">
+            <span>📅 2024–2026 技术演进</span>
+            <span style="color:var(--border);">|</span>
+            <span>🌾 小麦纹枯病案例</span>
+            <span style="color:var(--border);">|</span>
+            <span>🧪 三视角教学设计</span>
+        </div>
+    </div>
+    <div class="scroll-hint">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        <span>向下滚动</span>
+    </div>
+</section>
+
+<section id="concepts">
+    <div class="container">
+        <div class="section-header">
+            <h2><span class="section-num">1</span>本讲速览</h2>
+            <p>学习目标、核心概念与案例预览：建立本讲的知识框架</p>
+        </div>
+
+        <div class="card fade-in" style="margin-bottom:1.5rem;">
+            <div style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;">🎯 学习目标</div>
+            <div class="objective-bar">
+                <span class="objective-tag">理解知识图谱构建的三阶段流程（抽取→服务→维护）</span>
+                <span class="objective-tag secondary">掌握 PPE / IEU / AgenticGraphRAG 的核心原理</span>
+                <span class="objective-tag tertiary">评估从实验室到田间落地的成本、风险与可行性</span>
+            </div>
+        </div>
+
+        <div class="preview-grid">
+            <div class="preview-card fade-in">
+                <h4>📚 你将学会</h4>
+                <ul>
+                    <li>如何用 LLM 从农业文本中自动抽取实体-关系三元组</li>
+                    <li>为什么 "小模型 + 优化流程" 可以超越 "裸大模型"</li>
+                    <li>AgenticGraphRAG 如何解决复杂农业查询的检索难题</li>
+                    <li>知识图谱上线后如何增量更新、避免全量重建</li>
+                    <li>MCP 标准化带来的机遇与农业场景的安全约束</li>
+                </ul>
+            </div>
+            <div class="preview-card fade-in">
+                <h4>🌾 案例预览：小麦纹枯病</h4>
+                <ul>
+                    <li><strong>输入：</strong>植保手册、论文、专家经验文本</li>
+                    <li><strong>抽取：</strong>ERNIE 3.0 / GLM-4-9B 篇章级准确率 87.04%</li>
+                    <li><strong>优化：</strong>PPE 三阶段轮询将 F1 从 77.9% 提升至 85.1%</li>
+                    <li><strong>服务：</strong>自然语言 → Cypher 查询 → 溯源链路</li>
+                    <li><strong>维护：</strong>IEU 增量更新，专家闭环确认冲突</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-header" style="margin-top:3rem;">
+            <h2><span class="section-num"></span>核心概念</h2>
+            <p>本讲涉及的三个关键技术概念，首次出现请务必掌握</p>
+        </div>
+        <div class="concept-grid">
+            <div class="card concept-card fade-in">
+                <div class="card-header">
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <div class="concept-icon" style="background:#f0fdf4;">🔄</div>
+                        <div>
+                            <div class="card-title">PPE 递进提示抽取</div>
+                            <div class="card-subtitle">Progressive Prompt Extraction</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="concept-def">
+                    将抽取任务分解为<strong>三阶段轮询</strong>：首轮识别核心实体，次轮建立关系假设，末轮验证边界冲突。每轮聚焦单一语义角色，降低跨句子信息处理的错误传播。
+                </div>
+                <div class="concept-highlight">Qwen2.5-32B + PPE：实体属性 F1 85.1% / 三元组 F1 81.4%</div>
+            </div>
+            <div class="card concept-card fade-in">
+                <div class="card-header">
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <div class="concept-icon" style="background:#eff6ff;">🧩</div>
+                        <div>
+                            <div class="card-title">IEU 增量实体更新</div>
+                            <div class="card-subtitle">Incremental Entity Update</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="concept-def">
+                    区分<strong>"主属性"</strong>（结构化数据库高可信数据）与<strong>"次属性"</strong>（新抽取文本数据）。冲突时优先保留主属性，支持知识图谱的<strong>增量维护</strong>而非全量重建。
+                </div>
+                <div class="concept-highlight">适用场景：农药禁用公告、新品种手册的实时接入</div>
+            </div>
+            <div class="card concept-card fade-in">
+                <div class="card-header">
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <div class="concept-icon" style="background:#fffbeb;">🔍</div>
+                        <div>
+                            <div class="card-title">AgenticGraphRAG</div>
+                            <div class="card-subtitle">智能体驱动的图检索增强生成</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="concept-def">
+                    引入 <strong>ReAct（Reasoning + Acting）</strong>规划机制，将复杂农业查询分解为子任务，自主决策调用向量检索（语义模糊时）或 Cypher 结构化检索（条件明确时），经 RRF 融合后生成答案。
+                </div>
+                <div class="concept-highlight">水稻领域：人工查询 86% / LLM 模拟查询 89.33%</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="timeline" style="background: white;">
+    <div class="container">
+        <div class="section-header">
+            <h2><span class="section-num">2</span>技术演进时间线</h2>
+            <p>2024–2026 农业知识图谱构建范式变迁：从单点技术到系统化工程</p>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2024 – 2025 上半年</div>
+                    <div class="timeline-title">联合抽取 + LoRA 微调</div>
+                    <div class="timeline-desc">
+                        利用 LLM 上下文理解能力进行实体-关系联合抽取，配合 LoRA 高效微调降低计算门槛。ERNIE 3.0 / GLM-4-9B 篇章级准确率达 <strong>87.04%</strong>。早期工作可追溯至水稻病虫草害本体构建（戴才萍等, 2011），为后续自动化抽取奠定了领域 schema 基础。
+                        <br><span class="timeline-tag" style="background:#dcfce7; color:#166534;">→ 小麦纹枯病案例基础</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2025 下半年</div>
+                    <div class="timeline-title">RAG 增强问答</div>
+                    <div class="timeline-desc">
+                        将 KG 作为 LLM 外部知识库缓解幻觉。农民查询"小麦叶子发黄"时，系统检索"小麦-症状-叶黄"可能原因（缺氮/纹枯病/干旱），由 LLM 组织通俗回答。此阶段开始出现具体田间应用案例。
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2025 年底</div>
+                    <div class="timeline-title">精细化流程：PPE / IEU / AgenticGraphRAG</div>
+                    <div class="timeline-desc">
+                        <strong>PPE</strong>：三阶段轮询抽取（实体→关系→验证），Qwen2.5-32B 实体属性抽取 F1 达 <strong>85.1%</strong>，三元组抽取 F1 达 <strong>81.4%</strong>，超过同模型无 PPE 基线（77.9% / 76.6%）。<br>
+                        <strong>IEU</strong>：主/次属性分离，支持增量维护而非全量重建。<br>
+                        <strong>AgenticGraphRAG</strong>：ReAct 规划 + 双检索 + RRF 融合，水稻领域准确率 86%。
+                        <br><span class="timeline-tag" style="background:#fef9c3; color:#854d0e;">→ 小模型+优化流程 &gt; 裸大模型</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2026 年初</div>
+                    <div class="timeline-title">MCP 标准化与安全债务</div>
+                    <div class="timeline-desc">
+                        Anthropic MCP 协议获 200+ 社区服务器支持。Neo4j 官方套件提供标准化管道。但 <strong>MCPThreatHive</strong> 揭示 38 种新型威胁（工具描述投毒、间接提示注入），农业场景适配尚未完成。
+                        <br><span class="timeline-tag" style="background:#fee2e2; color:#991b1b;">→ 工程集成的必经之痛</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="applications">
+    <div class="container">
+        <div class="section-header">
+            <h2><span class="section-num">3</span>应用现状：从实验室到田间</h2>
+            <p>知识图谱技术在农业智能问答、病虫害诊断与多模态融合中的具体落地形态</p>
+        </div>
+
+        <div class="problem-list">
+            <div class="problem-card fade-in">
+                <div class="problem-icon" style="background:#eff6ff;">💬</div>
+                <div class="problem-content">
+                    <div class="problem-title">3.1 智能问答与农业咨询</div>
+                    <div class="problem-desc">
+                        将知识图谱作为 LLM 的外部知识库，可有效缓解 LLM 的"幻觉"问题。当农民询问"我家小麦叶子发黄怎么办"时，系统先通过知识图谱检索到"小麦-症状-叶黄"的可能原因（如缺氮、纹枯病或干旱），再由 LLM 组织成通俗易懂的回答。AgenticGraphRAG 架构进一步将这一过程分解为可观测的子步骤，使错误定位从"答案错误"细化到"检索策略选择错误"或"Cypher 生成错误"。
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem-card fade-in">
+                <div class="problem-icon" style="background:#fef2f2;">🐛</div>
+                <div class="problem-content">
+                    <div class="problem-title">3.2 农作物病虫害诊断辅助</div>
+                    <div class="problem-desc">
+                        通过整合植保手册、论文和专家经验构建的知识图谱，LLM 能够根据用户描述的症状推理最可能的病害并提供防治建议。2025 年的具体实现案例包括：基于 <span class="mono">YOLOv8</span> 检测咖啡病叶后，通过 RAG 增强 LLM 生成防治建议的端到端系统；以及基于 <span class="mono">InternVL2-8B</span> 多模态大模型，结合 SFT、RAG 与 RLHF 构建的小麦育种助手，在品种选择与表型分析任务上实现了视觉-文本联合推理。
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem-card fade-in">
+                <div class="problem-icon" style="background:#f0fdf4;">🖼️</div>
+                <div class="problem-content">
+                    <div class="problem-title">3.3 多模态农业知识图谱：从趋势到具象</div>
+                    <div class="problem-desc">
+                        "多模态知识图谱"已不再是趋势预测，而是有了具体实现。<strong>VEG-MMKG</strong> 项目基于预训练模型从图像、文本、视频、音频中抽取多模态知识构建蔬菜领域 KG；水稻与小麦领域的研究则探索了表型图像与文本描述的联合索引。这些实践表明，农业 KG 的下一步扩展需明确回答：当文本抽取置信度与视觉分类置信度冲突时，系统应遵循何种加权投票或专家仲裁协议。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="callout callout-info fade-in" style="margin-top: 1.5rem;">
+            <div class="callout-title">📎 教学映射</div>
+            3.1 对应文档第二章"检索增强的架构升级"的直接应用；3.2 与 3.3 对应文档第二章末尾提到的 YOLOv8+RAG 与多模态扩展方向，在网页中升格为独立小节以强调"从实验室到田间"的落地逻辑。
+        </div>
+    </div>
+</section>
+
+<section id="architecture">
+    <div class="container">
+        <div class="section-header">
+            <h2><span class="section-num">4</span>检索架构演进</h2>
+            <p>从传统 RAG 到 AgenticGraphRAG：复杂农业查询的分解与决策</p>
+        </div>
+
+        <div class="arch-container">
+            <div class="arch-box fade-in">
+                <div class="arch-title">传统 RAG（2025上半年）</div>
+                <div class="arch-flow">
+                    <div class="arch-node">用户查询：小麦叶子发黄怎么办？</div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-node">向量检索（语义匹配"发黄"）</div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-node warning">单一检索策略
+                        <div class="arch-annotation">难以同时覆盖语义模糊匹配与结构化条件过滤</div>
+                    </div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-node">LLM 生成答案</div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-node warning">黑箱输出，错误不可定位</div>
+                </div>
+                <div class="arch-compare-label" style="background: #fef2f2; color: #7f1d1d;">
+                    <strong>局限：</strong>无法同时处理症状语义匹配 + 作物类型/生长期/地域的结构化过滤
+                </div>
+            </div>
+
+            <div class="arch-box fade-in">
+                <div class="arch-title">AgenticGraphRAG（2025年底）</div>
+                <div class="arch-flow">
+                    <div class="arch-node">用户查询：小麦叶子发黄怎么办？</div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-node highlight">ReAct Planner（问题分解）</div>
+                    <div class="arch-arrow">↓</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                        <div class="arch-node" style="font-size: 0.75rem;">向量检索<br><span style="color: var(--text-muted);">语义模糊时</span></div>
+                        <div class="arch-node" style="font-size: 0.75rem;">Cypher 检索<br><span style="color: var(--text-muted);">条件明确时</span></div>
+                    </div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-node highlight">RRF 倒数排序融合</div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-node">LLM 生成答案</div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-node highlight">溯源链路（PDF页码/段落ID/置信度）</div>
+                </div>
+                <div class="arch-compare-label" style="background: #f0fdf4; color: #14532d;">
+                    <strong>优势：</strong>错误可定位至"检索策略选择错误"或"Cypher生成错误"，准确率提升至 86%
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="case" style="background: white;">
+    <div class="container">
+        <div class="section-header">
+            <h2><span class="section-num">5</span>案例实操：小麦纹枯病防治知识图谱</h2>
+            <p>从文档第三章提取的完整案例流程：抽取 → 服务 → 维护</p>
+        </div>
+
+        <div class="case-flow">
+            <div class="case-step fade-in">
+                <div class="case-step-num">01</div>
+                <div class="case-step-content">
+                    <div class="case-step-title">知识抽取阶段：从联合抽取到递进优化</div>
+                    <div class="case-step-desc">
+                        原始研究基于 <strong>ERNIE 3.0</strong> 和 <strong>GLM-4-9B</strong> 预训练模型，通过有监督微调和 LoRA 技术，构建了面向小麦纹枯病领域的实体关系联合抽取模型与防治措施分类模型，篇章级知识自动抽取准确率达 <strong>87.04%</strong>。
+                        <br><br>
+                        这一数据反映了 2024-2025 年初联合抽取范式的典型性能水平。若引入 2025 年底的 <strong>PPE</strong> 方法，可将"症状-病害-防治"的长文本描述分解为多轮抽取，每轮聚焦单一语义角色，降低跨句子信息处理的错误传播。
+                        <br><br>
+                        <span style="color:var(--warning);font-weight:600;">⚠️ 注意：</span>87.04% 为准确率（Accuracy），非 F1-score。农业语料存在类别不平衡，未来研究应补充 F1、精确率、召回率及错误分布的完整报告。
+                    </div>
+                    <div class="case-step-meta">
+                        <span>模型：ERNIE 3.0 / GLM-4-9B</span>
+                        <span>技术：LoRA 微调</span>
+                        <span>指标：Accuracy 87.04%</span>
+                        <span>优化方向：PPE 三阶段轮询</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="case-step fade-in">
+                <div class="case-step-num">02</div>
+                <div class="case-step-content">
+                    <div class="case-step-title">知识服务阶段：Cypher 查询与渐进式生成</div>
+                    <div class="case-step-desc">
+                        LLM 被用于将自然语言问题自动转换为 <strong>Cypher 图数据库查询语句</strong>，实现精准语义解析。例如，农民问"小麦纹枯病怎么治"，系统生成类似：
+                        <br><code>MATCH (d: Disease {name: '纹枯病'})-[:防治]->(m: Measure) RETURN m</code>
+                        <br><br>
+                        2026 年的工程实践要求补充<strong>渐进式生成与语法容错机制</strong>：当 LLM 生成的 Cypher 存在语法错误（如缺少 RETURN 子句）时，系统应进入修复模式（至多 3 次重试），失败后降级为向量检索 + 生成摘要的 RAG 模式，确保服务不中断。
+                        <br><br>
+                        此外，每个回答应附带<strong>溯源链路（Provenance Tracking）</strong>，标明实体来源的 PDF 页码、段落 ID 及抽取置信度，以建立农户信任。
+                    </div>
+                    <div class="case-step-meta">
+                        <span>查询语言：Cypher</span>
+                        <span>容错：3 次重试 + RAG 降级</span>
+                        <span>溯源：页码 / 段落 ID / 置信度</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="case-step fade-in">
+                <div class="case-step-num">03</div>
+                <div class="case-step-content">
+                    <div class="case-step-title">知识维护阶段：增量更新与专家闭环</div>
+                    <div class="case-step-desc">
+                        原始研究未涉及知识图谱的持续维护。<strong>IEU 机制</strong>为此提供了参考：当新的农技手册或政策文本（如农药禁用公告）接入时，系统仅抽取新增实体与关系，并与现有图谱中的"主属性"进行冲突检测。
+                        <br><br>
+                        若检测到矛盾（如某农药从"推荐"变为"禁用"），生成<strong>冲突报告推送专家仲裁</strong>，而非自动覆盖。专家修正结果以增量样本形式反馈至微调模块（约 50–100 条样本更新 LoRA，耗时约 15 分钟），避免全量重训的成本。
+                        <br><br>
+                        这一闭环借鉴了软件工程的原子更新与回滚原则：新知识点先进入"影子图谱"并行验证，验证集 F1 无下降后再合并主图谱。
+                    </div>
+                    <div class="case-step-meta">
+                        <span>机制：IEU 主/次属性分离</span>
+                        <span>冲突处理：专家仲裁 + 报告推送</span>
+                        <span>微调成本：50-100 条 / ~15 分钟</span>
+                        <span>回滚：验证集 F1 下降时自动恢复</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="teacher-note" style="margin-top:1.5rem;">
+            教学重点：此三节对应文档第三章"案例分析"的完整脉络。建议在课堂中配合 Cypher 查询示例与冲突检测报告模板进行讲解，让学生体会"从数据到服务"的工程闭环。
+        </div>
+    </div>
+</section>
+
+<section id="data">
+    <div class="container">
+        <div class="section-header">
+            <h2><span class="section-num">6</span>数据实证面板</h2>
+            <p>保留原始实测数据，标注指标类型与可信度</p>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-box fade-in">
+                <div class="chart-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                    模型性能对比（抽取任务）
+                </div>
+                <div id="chart-model" style="width: 100%; height: 300px;"></div>
+                <div class="chart-caption">
+                    * 87.04% 为 Accuracy（准确率），非 F1-score；农业语料存在类别不平衡，建议补充 F1/召回率
+                </div>
+            </div>
+
+            <div class="chart-box fade-in">
+                <div class="chart-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    检索架构准确率对比（水稻领域）
+                </div>
+                <div id="chart-retrieval" style="width: 100%; height: 300px;"></div>
+                <div class="chart-caption">
+                    * AgenticGraphRAG 需与 NaiveRAG、GraphRAG、LightRAG、HippoRAG2 严格对比方可发表
+                </div>
+            </div>
+
+            <div class="chart-box chart-full fade-in">
+                <div class="chart-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    知识图谱构建成本基准（Qwen2.5-72B）
+                </div>
+                <div class="callout callout-warn" style="margin: 0.5rem 0 1rem;">
+                    <div class="callout-title">⚠️ 学术注释</div>
+                    以下四项指标量纲各异（计数、时间、Token），不可累加或比较占比，应作为独立效率基准参考。
+                </div>
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-value" style="color: var(--primary);">901</div>
+                        <div class="metric-label">实体数量</div>
+                        <div class="metric-unit">个</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" style="color: var(--primary);">1,554</div>
+                        <div class="metric-label">三元组数量</div>
+                        <div class="metric-unit">个</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" style="color: var(--accent);">~300万</div>
+                        <div class="metric-label">Token 消耗</div>
+                        <div class="metric-unit">tokens</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" style="color: var(--warning);">3.38h</div>
+                        <div class="metric-label">构建耗时</div>
+                        <div class="metric-unit">小时</div>
+                    </div>
+                </div>
+                <div class="chart-caption" style="margin-top: 1rem;">
+                    * 数据来源于上海海洋大学水稻领域知识图谱单次全量构建实测。Token 消耗包含提示词与生成词。来源：参考文献[2]
+                </div>
+            </div>
+        </div>
+
+        <div class="cost-panel fade-in">
+            <div class="cost-panel-title">💰 成本速算：建一个县域级农业 KG 需要多少投入？</div>
+            <div class="cost-row">
+                <span>参考基准（上海海洋大学水稻 KG）</span>
+                <span><strong>901 实体 + 1,554 三元组</strong></span>
+            </div>
+            <div class="cost-row">
+                <span>单次全量构建 Token 消耗（Qwen2.5-72B）</span>
+                <span><strong>~300 万 Tokens</strong></span>
+            </div>
+            <div class="cost-row">
+                <span>按主流 API 单价估算（¥0.02 / 1K tokens）</span>
+                <span><strong>≈ ¥60 / 次全量构建</strong></span>
+            </div>
+            <div class="cost-row">
+                <span>构建耗时（单卡 A100 同级）</span>
+                <span><strong>~3.4 小时</strong></span>
+            </div>
+            <div class="cost-row">
+                <span>增量更新成本（IEU，50-100 条样本）</span>
+                <span><strong>≈ ¥1-3 / 次 + 15 分钟人工审核</strong></span>
+            </div>
+            <div class="cost-row">
+                <span>边缘部署方案（本地 7B 模型 + 云端 Fallback）</span>
+                <span><strong>硬件：消费级显卡 / 年运营：¥2,000-5,000</strong></span>
+            </div>
+            <div class="cost-total">
+                <span>结论：技术门槛已降至中小农业企业可承受范围</span>
+                <span>关键变量：数据质量 &gt; 模型尺寸</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="security">
+    <div class="container">
+        <div class="section-header">
+            <h2><span class="section-num">7</span>MCP 安全分析：农业场景视角</h2>
+            <p>从 38 种通用威胁中筛选农业信息化最关心的三类风险</p>
+        </div>
+
+        <div class="security-agri-grid">
+            <div class="security-agri-card fade-in">
+                <div class="security-agri-title">🛡️ 数据隐私安全</div>
+                <ul class="security-agri-list">
+                    <li><strong>农户信息隔离：</strong>多农户共享 MCP 服务时，会话上下文必须隔离，防止 A 农户的查询泄露 B 农户的地块信息</li>
+                    <li><strong>敏感数据防窃取：</strong>恶意 MCP 服务器可能伪装成合法查询工具，在调用链中窃取农业专家系统的生产数据</li>
+                    <li><strong>应对：</strong>采用多租户架构 + 查询日志脱敏 + 最小权限原则</li>
+                </ul>
+            </div>
+            <div class="security-agri-card fade-in">
+                <div class="security-agri-title">⚠️ 决策安全（重中之重）</div>
+                <ul class="security-agri-list">
+                    <li><strong>农药推荐错误：</strong>工具描述投毒或间接提示注入可能导致 LLM 调用错误的图谱查询接口，使农药推荐偏离安全剂量</li>
+                    <li><strong>病害诊断误导：</strong>Cypher 生成逻辑被篡改后，可能将"纹枯病"误诊为"根腐病"，导致错误防治方案</li>
+                    <li><strong>应对：</strong>敏感操作（农药剂量/病害诊断）强制人工确认；Cypher 查询只读权限默认开启</li>
+                </ul>
+            </div>
+            <div class="security-agri-card fade-in">
+                <div class="security-agri-title">🔧 服务稳定性</div>
+                <ul class="security-agri-list">
+                    <li><strong>农忙期拒绝服务：</strong>病虫害爆发期咨询量激增，高频图谱查询可能耗尽 MCP 服务器资源</li>
+                    <li><strong>权限越界：</strong>LLM Agent 获得超出必要的图谱写入权限，可能在增量更新时意外覆盖主属性</li>
+                    <li><strong>应对：</strong>边缘 Fallback 策略（本地 7B 模型兜底）+ 读写权限矩阵 + 流量限速</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card fade-in" style="margin-top: 1.5rem; border-left: 3px solid var(--danger);">
+            <div style="font-weight: 700; margin-bottom: 0.5rem; color: var(--danger); display:flex; align-items:center; gap:0.375rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                关键提醒：安全不是性能损耗，而是设计约束
+            </div>
+            <p style="font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.7;">
+                对于涉及农药推荐、病害诊断等<strong>高风险决策</strong>的农业场景，工具执行审批（Manual Approval）不应被视为性能损耗，而是安全刚需。
+                建议落地时至少配置：<strong>① Cypher 查询的只读/读写权限矩阵；② 敏感操作的二次确认流程；③ MCP 工具描述的数字签名校验。</strong>
+            </p>
+        </div>
+    </div>
+</section>
+
+<section id="problems" style="background: white;">
+    <div class="container">
+        <div class="section-header">
+            <h2><span class="section-num">8</span>现存问题：理想与现实的结构性差距</h2>
+            <p>从实验室探索到田间落地必须正视的四大工程瓶颈</p>
+        </div>
+
+        <div class="problem-list">
+            <div class="problem-card fade-in">
+                <div class="problem-icon" style="background:#fef2f2;">🌡️</div>
+                <div class="problem-content">
+                    <div class="problem-title">农业知识的复杂性与专业性</div>
+                    <div class="problem-desc">
+                        农业知识具有强烈的地域性、时效性和情境依赖性。同一品种在不同气候、土壤下的表现可能完全不同。LLM 难以捕捉这些细微差异，容易生成"听起来正确但实际不适用"的结论。AgenticGraphRAG 通过 ReAct 分解可在一定程度上缓解此问题（如将地域、生长期作为结构化过滤条件），但<strong>无法替代专家对于边缘案例的最终裁决</strong>。
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem-card fade-in">
+                <div class="problem-icon" style="background:#fffbeb;">📊</div>
+                <div class="problem-content">
+                    <div class="problem-title">数据获取与更新的工程挑战</div>
+                    <div class="problem-desc">
+                        尽管 LLM 降低了标注成本，高质量农业领域语料仍然稀缺且分散。农情变化快（如气候异常年份的病害爆发模式），知识更新时效性不足。IEU 机制虽支持增量维护，但其 Token 消耗与构建时间需纳入成本评估。据上海海洋大学水稻 KG 构建实验：构建 <code>901</code> 实体、<code>1,554</code> 三元组的 KG 消耗约 <code>300 万 Tokens</code>，耗时 <code>3.38 小时</code>（Qwen2.5-72B）。对于普通农业企业，这仍是需精打细算的资源投入。
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem-card fade-in">
+                <div class="problem-icon" style="background:#eff6ff;">💻</div>
+                <div class="problem-content">
+                    <div class="problem-title">计算资源与部署门槛</div>
+                    <div class="problem-desc">
+                        部署高性能 LLM 需要较强计算资源。2025 年的研究表明，Qwen2.5-32B 配合 PPE 可在性能上逼近 72B 裸模型，为边缘部署提供了模型尺寸与流程复杂度的权衡空间。基层农技站可采用更小规模的本地模型（如 <span class="mono">1.5B–7B</span>）处理高频常见查询，仅在置信度低于阈值时通过 MCP 协议调用云端大模型作为 Fallback。
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem-card fade-in">
+                <div class="problem-icon" style="background:#f0fdf4;">🔒</div>
+                <div class="problem-content">
+                    <div class="problem-title">MCP 集成的安全约束（2026 新增）</div>
+                    <div class="problem-desc">
+                        将知识图谱服务通过 MCP 协议接入 LLM Agent 生态时，必须正视 MCPThreatHive 揭示的风险：工具描述投毒可能导致 LLM 调用错误的图谱查询接口；间接提示注入可能篡改 Cypher 生成逻辑。农业场景涉及农药推荐、病害诊断等<strong>高风险决策</strong>，工具执行审批（Manual Approval）与上下文隔离不应被视为性能损耗，而是安全刚需。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="trends">
+    <div class="container">
+        <div class="section-header">
+            <h2><span class="section-num">9</span>发展趋势：可信、轻量、协同</h2>
+            <p>农业知识图谱从"可用"走向"可信"的四条工程路径</p>
+        </div>
+
+        <div class="trend-grid">
+            <div class="trend-card fade-in">
+                <div class="trend-num">01</div>
+                <div class="trend-title">轻量化与领域适配</div>
+                <div class="trend-desc">
+                    未来该领域将趋向通过微调小规模 LLM 降低应用门槛。核心认知已从"追求最大模型"转向"优化流程设计"：32B 模型配合 PPE 超越 72B 裸模型的实证，证明了农业 KG 构建的<strong>流程工程价值不亚于模型工程</strong>。
+                </div>
+            </div>
+
+            <div class="trend-card fade-in">
+                <div class="trend-num">02</div>
+                <div class="trend-title">人机协同的交互式验证</div>
+                <div class="trend-desc">
+                    专家便捷校验并持续优化模型仍是关键。建议构建的闭环包括：错误标记（农技人员选择错误类型）→ 增量修正（<strong>50–100 条样本更新 LoRA，约 15 分钟</strong>）→ 版本回滚（验证集 F1 下降时自动恢复上一版本）。这一机制借鉴了软件工程中的原子更新与回滚原则。
+                </div>
+            </div>
+
+            <div class="trend-card fade-in">
+                <div class="trend-num">03</div>
+                <div class="trend-title">多模态知识图谱的具象路径</div>
+                <div class="trend-desc">
+                    融合图像、遥感与传感器数据已成为具体工程目标而非远景。可行路径包括：无人机影像经 YOLO 检测病斑 → 提取病斑特征向量 → 与文本 KG 中的病害节点建立跨模态边 → LLM 联合生成诊断报告。此过程需显式定义<strong>模态间冲突消解协议</strong>（如视觉置信度优先于文本抽取置信度，或差异超过阈值时触发人工仲裁）。
+                </div>
+            </div>
+
+            <div class="trend-card fade-in">
+                <div class="trend-num">04</div>
+                <div class="trend-title">可解释性与安全增强</div>
+                <div class="trend-desc">
+                    LLM 需能追溯知识来源，让结论"有据可依"。同时，MCP 协议在农业 KG 中的部署需配套安全层：工具描述的数字签名验证、Cypher 查询的语法沙箱执行、敏感操作（如农药剂量推荐）的人工确认节点。安全不应是事后补丁，而应是<strong>设计约束</strong>。
+                </div>
+            </div>
+        </div>
+
+        <div class="callout callout-success fade-in" style="margin-top: 1.5rem;">
+            <div class="callout-title">💡 核心结论</div>
+            技术已跨越"可用"阈值，但尚未跨越"可信"阈值。差距不在算法，而在<strong>运维协议</strong>。农业 KG 的成熟不取决于单一模型的性能提升，而取决于全生命周期管道的可观测性、可回滚性与专家闭环机制。
+        </div>
+
+        <div class="section-header" style="margin-top:3rem;">
+            <h2><span class="section-num"></span>传统农技服务 vs KG+LLM 智能服务</h2>
+            <p>从业人员视角：落地价值直观对比</p>
+        </div>
+        <table class="compare-table fade-in">
+            <thead>
+                <tr>
+                    <th style="width:18%;">对比维度</th>
+                    <th style="width:41%;">传统农技服务</th>
+                    <th style="width:41%;">KG + LLM 智能服务</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>响应时效</strong></td>
+                    <td>专家下乡或电话答疑，受时间与地域限制</td>
+                    <td class="compare-win">7×24 小时在线，农户随时可查询</td>
+                </tr>
+                <tr>
+                    <td><strong>知识覆盖</strong></td>
+                    <td>依赖专家个人经验，存在知识盲区</td>
+                    <td class="compare-win">整合手册、论文、政策，覆盖多作物多病害</td>
+                </tr>
+                <tr>
+                    <td><strong>诊断精度</strong></td>
+                    <td>专家经验准确率高，但难以量化复制</td>
+                    <td>准确率 86%+，错误可定位至具体检索环节</td>
+                </tr>
+                <tr>
+                    <td><strong>溯源能力</strong></td>
+                    <td>口头建议，难以追溯依据来源</td>
+                    <td class="compare-win">每次回答附带 PDF 页码、段落 ID、置信度</td>
+                </tr>
+                <tr>
+                    <td><strong>多语言/多模态</strong></td>
+                    <td>受限于专家语言能力，无图像分析</td>
+                    <td class="compare-win">支持方言语音输入、病斑图像联合诊断</td>
+                </tr>
+                <tr>
+                    <td><strong>成本结构</strong></td>
+                    <td>专家人力成本持续且高</td>
+                    <td class="compare-win">初期构建后，边际查询成本趋近于零</td>
+                </tr>
+                <tr>
+                    <td><strong>风险点</strong></td>
+                    <td>专家疲劳、主观偏差</td>
+                    <td>LLM 幻觉、安全威胁，需人工审批兜底</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section id="maturity" style="background: white;">
+    <div class="container">
+        <div class="section-header">
+            <h2><span class="section-num">10</span>技术成熟度矩阵</h2>
+            <p>附录表格的交互版本：区分"已验证"、"单领域验证"与"建议性"技术</p>
+        </div>
+
+        <table class="matrix-table fade-in">
+            <thead>
+                <tr>
+                    <th>技术/方法</th>
+                    <th>时间线</th>
+                    <th>成熟度</th>
+                    <th>本文定位</th>
+                    <th>文档批注</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>实体-关系联合抽取 + LoRA</strong></td>
+                    <td>2024–2025</td>
+                    <td><span class="maturity-dot dot-green"></span>已验证</td>
+                    <td>小麦纹枯病案例实测基础</td>
+                    <td style="color: var(--text-muted); max-width: 280px;">数据可信，但需补充 F1/召回率及错误分布</td>
+                </tr>
+                <tr>
+                    <td><strong>递进提示抽取（PPE）</strong></td>
+                    <td>2025 年底</td>
+                    <td><span class="maturity-dot dot-yellow"></span>单领域验证</td>
+                    <td>建议优化方向（水稻/小麦）</td>
+                    <td style="color: var(--text-muted); max-width: 280px;">实体属性 F1 85.1% / 三元组 F1 81.4% 可信，但缺乏跨作物泛化实验</td>
+                </tr>
+                <tr>
+                    <td><strong>增量实体更新（IEU）</strong></td>
+                    <td>2025 年底</td>
+                    <td><span class="maturity-dot dot-yellow"></span>单领域验证</td>
+                    <td>建议维护机制</td>
+                    <td style="color: var(--text-muted); max-width: 280px;">主/次属性概念清晰，状态机未闭合</td>
+                </tr>
+                <tr>
+                    <td><strong>AgenticGraphRAG</strong></td>
+                    <td>2025 年底</td>
+                    <td><span class="maturity-dot dot-yellow"></span>单领域验证</td>
+                    <td>检索架构升级参考</td>
+                    <td style="color: var(--text-muted); max-width: 280px;">需补充与 LightRAG/HippoRAG2 的对比数据</td>
+                </tr>
+                <tr>
+                    <td><strong>MCP 协议集成</strong></td>
+                    <td>2024–2026</td>
+                    <td><span class="maturity-dot dot-yellow"></span>工具链完善中</td>
+                    <td>工程集成标准化路径</td>
+                    <td style="color: var(--text-muted); max-width: 280px;">200+ 社区服务器，但农业适配刚起步</td>
+                </tr>
+                <tr>
+                    <td><strong>MCPThreatHive 安全框架</strong></td>
+                    <td>2026.04</td>
+                    <td><span class="maturity-dot dot-red"></span>刚提出</td>
+                    <td>必须正视的安全约束</td>
+                    <td style="color: var(--text-muted); max-width: 280px;">38 种威胁通用描述，农业场景攻击向量待建模</td>
+                </tr>
+                <tr>
+                    <td><strong>YOLOv8+RAG 多模态诊断</strong></td>
+                    <td>2025</td>
+                    <td><span class="maturity-dot dot-yellow"></span>具体案例存在</td>
+                    <td>多模态扩展参考实现</td>
+                    <td style="color: var(--text-muted); max-width: 280px;">咖啡病害案例，跨作物迁移成本未评估</td>
+                </tr>
+                <tr>
+                    <td><strong>边缘部署 Fallback 策略</strong></td>
+                    <td>2026</td>
+                    <td><span class="maturity-dot dot-red"></span>建议性</td>
+                    <td>成本优化的工程思路</td>
+                    <td style="color: var(--text-muted); max-width: 280px;">1.5B–7B 本地模型 + MCP 云端 Fallback，无实测</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section id="quiz">
+    <div class="container">
+        <div class="section-header">
+            <h2><span class="section-num">11</span>课堂互动与思考题</h2>
+            <p>围绕文档核心知识点设计的开放性讨论题，点击展开参考答案</p>
+        </div>
+
+        <div class="quiz-container">
+            <div class="quiz-item" tabindex="0" role="button" aria-expanded="false">
+                <div class="quiz-toggle">▼</div>
+                <div class="quiz-question">Q1：PPE 将抽取任务分解为"实体→关系→验证"三阶段轮询。为什么这种"分而治之"的策略能让 32B 模型超越 72B 裸模型？</div>
+                <div class="quiz-answer">
+                    <strong>核心逻辑：</strong>这并不违反 Scaling Law，而是证明了<strong>流程工程价值 ≈ 模型工程价值</strong>。<br><br>
+                    72B 模型虽参数量更大，但在单次生成中同时处理"实体识别+关系假设+边界验证"时，注意力机制会被稀释，跨句子信息容易混淆。PPE 将任务分解后，每轮只需聚焦单一语义角色，错误传播被限制在局部阶段。<br><br>
+                    类比：让一个专家同时做诊断、开药、写病历，错误率高于让三个专科医生分工协作——即使后者的学历总和低于前者。
+                </div>
+            </div>
+
+            <div class="quiz-item" tabindex="0" role="button" aria-expanded="false">
+                <div class="quiz-toggle">▼</div>
+                <div class="quiz-question">Q2：某农药因政策更新从"推荐"变为"禁用"，IEU 机制如何处理这一冲突？为什么"自动覆盖"是危险的？</div>
+                <div class="quiz-answer">
+                    <strong>IEU 处理流程：</strong><br>
+                    ① <strong>属性比对：</strong>新抽取文本中的"禁用"标记为"次属性"，与结构化数据库中的"推荐"（主属性）冲突。<br>
+                    ② <strong>主属性优先：</strong>系统不自动覆盖，而是生成冲突报告推送专家仲裁。<br>
+                    ③ <strong>专家确认：</strong>专家核实政策更新真实性后，手动将"禁用"提升为主属性。<br>
+                    ④ <strong>增量反馈：</strong>修正结果以 50–100 条样本更新 LoRA，约 15 分钟完成模型微调。<br><br>
+                    <strong>"自动覆盖"的危险：</strong>LLM 可能从错误来源（如伪造的政策文件）抽取到假信息，若自动覆盖主属性，将导致系统性安全风险——例如将"禁用农药"推荐给农户，造成不可逆的经济与生态损失。
+                </div>
+            </div>
+
+            <div class="quiz-item" tabindex="0" role="button" aria-expanded="false">
+                <div class="quiz-toggle">▼</div>
+                <div class="quiz-question">Q3：基层农技站预算有限，应该选择本地部署小模型（1.5B–7B）还是直接调用云端大模型 API？</div>
+                <div class="quiz-answer">
+                    <strong>推荐策略：混合架构（边缘 + 云端 Fallback）</strong><br><br>
+                    ① <strong>本地小模型处理高频查询：</strong>常见病害、标准防治方案等确定性高的问题，由 7B 本地模型直接回答，响应快、无网络依赖、零 API 费用。<br>
+                    ② <strong>云端大模型处理边缘案例：</strong>当本地模型置信度低于阈值（如出现罕见症状、多病害并发），通过 MCP 协议调用云端 Qwen2.5-72B 作为 Fallback。<br>
+                    ③ <strong>成本测算：</strong>本地部署一次性硬件投入约 ¥8,000–15,000（消费级显卡），年运营电费约 ¥2,000；云端 API 仅在高频 Fallback 时产生费用，通常月耗 ¥100–500。<br><br>
+                    <strong>关键认知：</strong>对于基层场景，<strong>可用性（离线也能用）&gt; 精确性（追求最高准确率）</strong>。农户在田间地头无法保证网络稳定，本地模型是底线保障。
+                </div>
+            </div>
+
+            <div class="quiz-item" tabindex="0" role="button" aria-expanded="false">
+                <div class="quiz-toggle">▼</div>
+                <div class="quiz-question">Q4：从"实验室探索"到"田间落地"，你认为当前最大的 Gap 是什么？技术、数据还是人？</div>
+                <div class="quiz-answer">
+                    <strong>文档结论：</strong>最大的 Gap 不在算法，而在<strong>运维协议</strong>——全生命周期管道的可观测性、可回滚性与专家闭环机制。<br><br>
+                    <strong>三视角补充：</strong><br>
+                    ① <strong>教师视角：</strong>需要培养既懂农业又懂 LLM 工程的复合型人才，当前教育体系尚未覆盖这一交叉领域。<br>
+                    ② <strong>学生视角：</strong>实验室追求 Accuracy/F1，田间需要的是"错误分布热力图"——系统在什么作物、什么关系类型上最容易出错？没有这张地图，农技人员不敢信任系统。<br>
+                    ③ <strong>从业人员视角：</strong>技术已可用，但"谁为错误负责"的权责界定模糊。农药推荐错误导致减产，责任在模型厂商、系统集成商还是使用农技站？法律与保险机制滞后于技术发展。<br><br>
+                    <strong>最终裁决：</strong>技术是必要条件，<strong>制度（运维协议 + 权责界定 + 人才培养）</strong>才是充分条件。
+                </div>
+            </div>
+        </div>
+
+        <div class="teacher-note" style="margin-top: 1.5rem;">
+            课堂建议：Q1 适合作为"大模型效率 vs 效果"辩论的开场；Q2 适合角色扮演（农技人员 vs 系统管理员）；Q3 适合分组讨论（成本组 vs 技术组）；Q4 适合作为课程论文的选题切入点。
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p class="footer-title">农业知识图谱技术演进 · 课堂演示版</p>
+        <p>基于《基于大语言模型的农业知识图谱自动构建》报告 | 案例来源：刘珂艺（2024.12）</p>
+        <p style="margin-top: 0.75rem; font-size: 0.75rem; opacity: 0.5;">生成时间：2026-04-29 | 优化版本：v2（三视角教学设计）</p>
+    </div>
+</footer>
+
+<script src="js/main.js"></script>
+
+</body>
+</html>
