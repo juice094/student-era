@@ -15,3 +15,24 @@ projects/*/dist/
 projects/*/node_modules/
 packages/*/dist/
 packages/*/node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.ipynb_checkpoints/
+
+# ML artifacts (large files / generated)
+data/
+models/*.pth
+models/*.pt
+models/*.ckpt
+outputs/
+runs/
+*.tar
+*.zip
+
+# Environment / secrets
+.env
+.env.local
