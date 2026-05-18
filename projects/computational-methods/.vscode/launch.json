@@ -1,0 +1,46 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Current File (WSL)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "python": "/opt/miniconda/bin/python",
+      "cwd": "${fileDirname}"
+    },
+    {
+      "name": "Exp1: Root Finding",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/exp1_root_finding.py",
+      "console": "integratedTerminal",
+      "python": "/opt/miniconda/bin/python"
+    },
+    {
+      "name": "Exp2: Linear Systems",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/exp2_linear_systems.py",
+      "console": "integratedTerminal",
+      "python": "/opt/miniconda/bin/python"
+    },
+    {
+      "name": "Exp3: Interpolation",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/exp3_interpolation_integration.py",
+      "console": "integratedTerminal",
+      "python": "/opt/miniconda/bin/python"
+    },
+    {
+      "name": "Exp4: ODE Solver",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/exp4_ode_solver.py",
+      "console": "integratedTerminal",
+      "python": "/opt/miniconda/bin/python"
+    }
+  ]
+}
