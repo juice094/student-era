@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GIS 实验导航站 — Student Era</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --accent2: #238636;
+      --warn: #d29922;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+    .container { max-width: 960px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 48px; }
+    header h1 { font-size: 2rem; margin-bottom: 8px; }
+    header p { color: var(--muted); font-size: 0.95rem; }
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .badge-green { background: rgba(35,134,54,0.2); color: #3fb950; }
+    .badge-blue { background: rgba(88,166,255,0.15); color: var(--accent); }
+    .badge-warn { background: rgba(210,153,34,0.15); color: var(--warn); }
+
+    .exp-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 24px;
+      transition: border-color 0.2s;
+    }
+    .exp-card:hover { border-color: var(--accent); }
+    .exp-card h2 {
+      font-size: 1.25rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .exp-card .meta {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin: 20px 0 10px;
+    }
+
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+    }
+    .link-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.15s;
+    }
+    .link-btn:hover {
+      border-color: var(--accent);
+      background: rgba(88,166,255,0.05);
+    }
+    .link-btn .icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .link-btn .label { flex: 1; }
+    .link-btn .arrow {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .data-file {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+    }
+    .data-file .size { color: var(--muted); margin-left: auto; }
+
+    footer {
+      text-align: center;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .quick-start {
+      background: linear-gradient(135deg, rgba(88,166,255,0.08), rgba(35,134,54,0.08));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+    .quick-start h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quick-start ol {
+      margin-left: 20px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .quick-start li { margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>GIS 实验导航站</h1>
+      <p>遥感图像处理 &amp; 地图制作 — 快速链接与资源汇总</p>
+    </header>
+
+    <div class="quick-start">
+      <h3>实验前准备</h3>
+      <ol>
+        <li>确认 Windows 系统已安装对应 GIS 软件</li>
+        <li>下载实验数据（见下方"实验数据"板块）</li>
+        <li>按照实验步骤文档逐步操作</li>
+        <li>每完成一步及时截图保存（用于实验报告）</li>
+      </ol>
+    </div>
+
+    <!-- 实验一：ERDAS -->
+    <div class="exp-card">
+      <h2>
+        <span>实验一</span>
+        基于 ERDAS 9.2 的遥感图像处理
+        <span class="badge badge-warn">需 Windows</span>
+      </h2>
+      <div class="meta">软件：ERDAS IMAGINE 9.2 | 数据：water.img / 1.img | 核心操作：色彩变换、图像融合、卷积增强</div>
+
+      <div class="section-title">实验数据</div>
+      <div class="data-file">
+        <span class="icon">&#128190;</span>
+        <span>water.img</span>
+        <span class="size">~100 KB</span>
+      </div>
+      <div class="data-file">
+        <span class="icon">&#128190;</span>
+        <span>1.img</span>
+        <span class="size">~470 KB</span>
+      </div>
+
+      <div class="section-title">软件与文档</div>
+      <div class="link-grid">
+        <a class="link-btn" href="https://www.hexagongeospatial.com/products/erdas-imagine" target="_blank" rel="noopener">
+          <span class="icon">&#127760;</span>
+          <span class="label">ERDAS 官方主页</span>
+          <span class="arrow">&#8599;</span>
+        </a>
+        <a class="link-btn" href="https://www.bilibili.com/video/BV1q54y1G7j5" target="_blank" rel="noopener">
+          <span class="icon">&#127909;</span>
+          <span class="label">遥感图像处理教程 (B站)</span>
+          <span class="arrow">&#8599;</span>
+        </a>
+        <a class="link-btn" href="../gis-remote-sensing/README.md">
+          <span class="icon">&#128221;</span>
+          <span class="label">实验步骤文档</span>
+          <span class="arrow">&#8594;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 实验二：SuperMap -->
+    <div class="exp-card">
+      <h2>
+        <span>实验二</span>
+        基于 SuperMap 的地图制作
+        <span class="badge badge-warn">需 Windows</span>
+      </h2>
+      <div class="meta">软件：SuperMap iDesktop 10 | 数据：行政区划图 / 文物保护单位 | 核心操作：数据查询、缓冲区、叠加分析、专题图</div>
+
+      <div class="section-title">软件与文档</div>
+      <div class="link-grid">
+        <a class="link-btn" href="https://www.supermap.com/cn/downloads/iDesktop" target="_blank" rel="noopener">
+          <span class="icon">&#128229;</span>
+          <span class="label">SuperMap iDesktop 下载</span>
+          <span class="arrow">&#8599;</span>
+        </a>
+        <a class="link-btn" href="https://help.supermap.com/iDesktop/" target="_blank" rel="noopener">
+          <span class="icon">&#128214;</span>
+          <span class="label">官方技术文档</span>
+          <span class="arrow">&#8599;</span>
+        </a>
+        <a class="link-btn" href="https://edu.supermap.com/" target="_blank" rel="noopener">
+          <span class="icon">&#127891;</span>
+          <span class="label">SuperMap 在线学堂</span>
+          <span class="arrow">&#8599;</span>
+        </a>
+        <a class="link-btn" href="../gis-supermap/README.md">
+          <span class="icon">&#128221;</span>
+          <span class="label">实验步骤文档</span>
+          <span class="arrow">&#8594;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 辅助工具 -->
+    <div class="exp-card">
+      <h2>
+        <span>工具箱</span>
+        辅助资源
+        <span class="badge badge-blue">通用</span>
+      </h2>
+      <div class="link-grid">
+        <a class="link-btn" href="https://www.gscloud.cn/" target="_blank" rel="noopener">
+          <span class="icon">&#127758;</span>
+          <span class="label">地理空间数据云 (影像下载)</span>
+          <span class="arrow">&#8599;</span>
+        </a>
+        <a class="link-btn" href="https://www.openstreetmap.org/" target="_blank" rel="noopener">
+          <span class="icon">&#128506;</span>
+          <span class="label">OpenStreetMap (矢量数据)</span>
+          <span class="arrow">&#8599;</span>
+        </a>
+        <a class="link-btn" href="https://earthexplorer.usgs.gov/" target="_blank" rel="noopener">
+          <span class="icon">&#128247;</span>
+          <span class="label">USGS Earth Explorer (Landsat)</span>
+          <span class="arrow">&#8599;</span>
+        </a>
+        <a class="link-btn" href="https://qgis.org/" target="_blank" rel="noopener">
+          <span class="icon">&#128295;</span>
+          <span class="label">QGIS (开源替代方案)</span>
+          <span class="arrow">&#8599;</span>
+        </a>
+      </div>
+    </div>
+
+    <footer>
+      <p>Student Era — GIS 实验资源导航 | 仅供课程学习使用</p>
+    </footer>
+  </div>
+</body>
+</html>
