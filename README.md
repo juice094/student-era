@@ -32,6 +32,18 @@
 
 详见 [`docs/ENVIRONMENT.md`](./docs/ENVIRONMENT.md)。
 
+## 项目展示主页
+
+直接浏览器打开根目录 [`index.html`](./index.html) 查看所有课程项目的统一展示门户。
+
+## 共享基础设施
+
+| 包名 | 路径 | 说明 |
+|------|------|------|
+| `@student-era/theme` | `packages/@student-era/theme/` | 暗色主题 CSS 设计系统（提取自导航站） |
+| `@student-era/echarts-config` | `packages/@student-era/echarts-config/` | ECharts 最小注册配置（按需加载） |
+| `@student-era/vue-utils` | `packages/@student-era/vue-utils/` | Vue 3 组件（ChartPanel, DataCard）与工具库 |
+
 ## 快速开始
 
 ### 前端项目
@@ -73,7 +85,12 @@ bash exp2-password-cracking.sh
 
 ```
 .
-├── packages/                   # Shared packages (future)
+├── index.html                  # 项目展示主页（根门户）
+├── packages/                   # 共享基础设施（pnpm workspace）
+│   └── @student-era/
+│       ├── theme/              # 暗色主题 CSS 设计系统
+│       ├── echarts-config/     # ECharts 最小注册配置
+│       └── vue-utils/          # Vue 3 组件与工具库
 ├── projects/                   # 课程设计项目
 │   ├── bigdata-visualization/  # Vue 3 数据可视化仪表盘
 │   ├── ml-apple-detection/     # PyTorch 苹果质量分类
@@ -88,12 +105,13 @@ bash exp2-password-cracking.sh
 │   └── cyber-security-webui/
 ├── docs/                       # 课程资料归档
 │   ├── ENVIRONMENT.md          # 环境配置速查
-│   ├── STATUS-2026-05-17.md    # 项目状态与 TODO
+│   ├── STATUS-2026-05-18.md    # 项目状态与 TODO
 │   ├── ARCHITECTURE-REVIEW-2026-05-18.md  # 架构审视
 │   ├── 课程资料索引.md         # 复习资料目录
 │   ├── 大数据可视化/
 │   ├── 农业信息技术/
 │   └── 网络安全/
+├── .github/workflows/          # GitHub Actions CI
 ├── .gitattributes              # Git LFS 配置
 └── README.md                   # 本文件
 ```
@@ -107,6 +125,10 @@ bash exp2-password-cracking.sh
 5. **信息检索实验** — 4 个实验模块导航站
 6. **复习资料归档** — 大数据可视化 + 农业信息技术期末资料（Git LFS）
 7. **架构审视报告** — 仓库优化建议与 Agent 协作方案
+8. **共享基础设施提取** — 暗色主题 CSS + ECharts 配置 + Vue 组件库（pnpm workspace）
+9. **根目录展示页** — 统一项目门户 `index.html`
+10. **CI 工作流** — GitHub Actions 三阶段验证通过
+11. **Release v1.0.0** — 2026 Spring 课程归档发布
 
 ## Topics
 
