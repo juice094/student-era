@@ -7,7 +7,7 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.12-EE4C2C?logo=pytorch)](https://pytorch.org/)
 [![WSL2](https://img.shields.io/badge/WSL2-Ubuntu%2FKali-4EAA25?logo=linux)](https://docs.microsoft.com/windows/wsl/)
 
-> 数据科学与大数据技术专业课程设计归档。涵盖大数据可视化、机器学习、网络安全、遥感图像处理、GIS地图制作、数值计算、信息检索——从 Vue 3 仪表盘到 WSL2 大数据集群。
+> Student-era course design archive — Vue 3 + ECharts dashboards, PyTorch computer vision, Hadoop/Spark/Kafka big data stack, GIS/remote sensing, numerical methods, network security, and information retrieval. Built on WSL2.
 
 ## 项目索引
 
@@ -129,7 +129,9 @@ bash exp2-password-cracking.sh
 9. **根目录展示页** — 统一项目门户 `index.html`
 10. **CI 工作流** — GitHub Actions 三阶段验证通过
 11. **Release v1.0.0** — 2026 Spring 课程归档发布
+12. **实验指导书归档** — 计算方法 + 信息检索原始文档入库
+13. **仓库门面更新** — README 描述/Topics 同步 GitHub About，根目录 `index.html` 内容刷新
 
 ## Topics
 
-`visualization` `education` `engineering` `crud` `typescript` `dashboard` `frontend` `echarts` `admin-system` `vue3` `vite` `element-plus` `pinia` `pytorch` `machine-learning` `computer-vision` `network-security` `kali-linux` `gis` `remote-sensing` `supermap` `numerical-computing` `numpy` `matplotlib` `information-retrieval` `wsl2` `bigdata` `hadoop` `spark` `kafka`
+`visualization` `engineering` `typescript` `dashboard` `frontend` `echarts` `student-projects` `course-design` `admin-system` `vue3` `vite` `element-plus` `pinia` `machine-learning` `pytorch` `bigdata` `hadoop` `spark` `numpy` `gis`
