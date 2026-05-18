@@ -1,0 +1,82 @@
+/* Site overrides for GIS Lab Navigator */
+
+/* Badge inline spacing (used inside h2 flex contexts) */
+.badge-inline {
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* Card title with flex layout */
+.exp-card h2 {
+  font-size: 1.25rem;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.exp-card .meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+/* Link button with icon + label structure */
+.link-btn .icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.link-btn .label {
+  flex: 1;
+}
+
+/* Data file listing */
+.data-file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.data-file .size {
+  color: var(--muted);
+  margin-left: auto;
+}
+
+/* Quick start callout box */
+.quick-start {
+  background: linear-gradient(135deg, rgba(88, 166, 255, 0.08), rgba(35, 134, 54, 0.08));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.quick-start h3 {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quick-start ol {
+  margin-left: 20px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.quick-start li {
+  margin-bottom: 4px;
+}

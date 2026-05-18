@@ -5,7 +5,6 @@ export function exportToExcel(data: any[], filename: string, headers?: Record<st
     return
   }
 
-  // Map data keys to human-readable headers if provided
   const rows = data.map((item) => {
     if (!headers) return item
     const row: Record<string, any> = {}
@@ -19,7 +18,6 @@ export function exportToExcel(data: any[], filename: string, headers?: Record<st
   const workbook = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
 
-  // Auto-adjust column widths
   const colWidths = Object.keys(rows[0] || {}).map((key) => ({
     wch: Math.max(key.length * 2 + 2, 12)
   }))

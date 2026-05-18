@@ -11,6 +11,8 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@student-era/echarts-config": "workspace:*",
+    "@student-era/vue-utils": "workspace:*",
     "@element-plus/icons-vue": "^2.3.2",
     "axios": "^1.15.2",
     "echarts": "^6.0.0",

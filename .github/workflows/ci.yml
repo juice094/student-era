@@ -63,9 +63,6 @@ jobs:
   frontend-build:
     name: Frontend Build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: projects/bigdata-visualization
     steps:
       - uses: actions/checkout@v4
         with:
@@ -79,12 +76,15 @@ jobs:
         with:
           node-version: '20'
           cache: 'pnpm'
-          cache-dependency-path: projects/bigdata-visualization/pnpm-lock.yaml
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            projects/bigdata-visualization/pnpm-lock.yaml
 
-      - name: Install dependencies
+      - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
+      - name: Build bigdata-visualization
+        working-directory: projects/bigdata-visualization
         run: pnpm run build
 
   docs-check:

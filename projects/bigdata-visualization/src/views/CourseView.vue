@@ -71,7 +71,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { useCourseStore } from '@/stores/course'
 import { useTeacherStore } from '@/stores/teacher'
 import { useDictStore } from '@/stores/dict'
-import { exportToExcel, readExcelFile } from '@/utils/export'
+import { exportToExcel, readExcelFile } from '@student-era/vue-utils'
 import type { Course } from '@/types/course'
 
 const courseStore = useCourseStore()

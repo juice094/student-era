@@ -100,11 +100,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import ChartPanel from '@/components/ChartPanel.vue'
+import { ChartPanel } from '@student-era/vue-utils'
 import { useScoreStore } from '@/stores/score'
 import { useStudentStore } from '@/stores/student'
 import { useCourseStore } from '@/stores/course'
-import { exportToExcel } from '@/utils/export'
+import { exportToExcel } from '@student-era/vue-utils'
 import type { Score } from '@/types/score'
 
 const scoreStore = useScoreStore()

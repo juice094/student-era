@@ -1,0 +1,21 @@
+{
+  "name": "@student-era/echarts-config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Minimal ECharts registration for student-era projects",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "echarts": "^6.0.0"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3"
+  }
+}

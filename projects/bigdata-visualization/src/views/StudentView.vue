@@ -68,10 +68,10 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, h } from 'vue'
 import { ElMessageBox, ElNotification } from 'element-plus'
-import ChartPanel from '@/components/ChartPanel.vue'
+import { ChartPanel } from '@student-era/vue-utils'
 import StudentFormDialog from '@/components/StudentFormDialog.vue'
 import { useStudentStore } from '@/stores/student'
-import { exportToExcel, readExcelFile } from '@/utils/export'
+import { exportToExcel, readExcelFile } from '@student-era/vue-utils'
 import type { Student } from '@/types'
 
 const studentStore = useStudentStore()

@@ -1,0 +1,134 @@
+/* Site overrides for Information Retrieval Navigator */
+
+/* Quick bar for shortcut links */
+.quick-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 36px;
+  padding: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.quick-bar a {
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+}
+
+.quick-bar a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Experiment card header */
+.exp-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.exp-header h2 {
+  font-size: 1.2rem;
+}
+
+.exp-meta {
+  color: var(--muted);
+  font-size: 0.88rem;
+  margin-bottom: 16px;
+}
+
+/* Step list with circular counters */
+.step-list {
+  list-style: none;
+  counter-reset: step;
+}
+
+.step-list li {
+  position: relative;
+  padding-left: 32px;
+  margin-bottom: 10px;
+  font-size: 0.92rem;
+}
+
+.step-list li::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 1px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Screenshot tip box */
+.screenshot-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(210, 153, 34, 0.08);
+  border-left: 3px solid var(--warn);
+  border-radius: 0 8px 8px 0;
+  margin: 12px 0;
+  font-size: 0.88rem;
+}
+
+.screenshot-tip .icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Tools grid */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.tool-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.tool-card h4 {
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+}
+
+.tool-card p {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-bottom: 10px;
+}
+
+.tool-card a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.82rem;
+}
+
+.tool-card a:hover {
+  text-decoration: underline;
+}

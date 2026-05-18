@@ -75,8 +75,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { UserFilled, Male, Female, School, Reading, TrendCharts } from '@element-plus/icons-vue'
-import DataCard from '@/components/DataCard.vue'
-import ChartPanel from '@/components/ChartPanel.vue'
+import { DataCard, ChartPanel } from '@student-era/vue-utils'
 import { useStudentStore } from '@/stores/student'
 import { useCourseStore } from '@/stores/course'
 import { useScoreStore } from '@/stores/score'
