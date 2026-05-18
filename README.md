@@ -3,99 +3,111 @@
 [![Vue 3](https://img.shields.io/badge/Vue-3.4-4FC08D?logo=vuedotjs)](https://vuejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.0-646CFF?logo=vite)](https://vitejs.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.4-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![ECharts](https://img.shields.io/badge/ECharts-5.0-AA344D?logo=apacheecharts)](https://echarts.apache.org/)
-[![Element Plus](https://img.shields.io/badge/Element%20Plus-2.9-409EFF)](https://element-plus.org/)
+[![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.12-EE4C2C?logo=pytorch)](https://pytorch.org/)
+[![WSL2](https://img.shields.io/badge/WSL2-Ubuntu%2FKali-4EAA25?logo=linux)](https://docs.microsoft.com/windows/wsl/)
 
-> A curated archive of student-era course designs and classroom demos. Covers data visualization, agricultural IT, and cyber security — from Vue 3 dashboards to pure HTML5 prototypes.
+> 数据科学与大数据技术专业课程设计归档。涵盖大数据可视化、机器学习、网络安全、遥感图像处理、GIS地图制作、数值计算、信息检索——从 Vue 3 仪表盘到 WSL2 大数据集群。
 
-**Featured Projects**
-- [`projects/bigdata-visualization`](./projects/bigdata-visualization) — Academic admin dashboard with Vue 3, Vite, TypeScript, ECharts. Features data visualization, complete CRUD, form validation, undo-delete, and enterprise-level engineering practices.
-- [`projects/ml-apple-detection`](./projects/ml-apple-detection) — 8-class apple quality classification using PyTorch and ResNet18. Includes data exploration, training pipeline with TensorBoard, and inference scripts.
-- [`projects/network-security`](./projects/network-security) — Network information security experiments on Kali Linux WSL2. Covers info collection, password cracking, DoS attack demo, and system hardening.
-- [`projects/gis-remote-sensing`](./projects/gis-remote-sensing) — Remote sensing image processing with ERDAS 9.2: RGB-IHS conversion, resolution merge, and convolution enhancement.
-- [`projects/gis-supermap`](./projects/gis-supermap) — Map production with SuperMap iDesktop 10: data query, buffer analysis, overlay analysis, and thematic mapping.
-- [`projects/gis-lab-navigator`](./projects/gis-lab-navigator) — Web navigation portal for GIS experiments with quick links to software downloads, docs, and tutorials.
-- [`projects/computational-methods`](./projects/computational-methods) — Numerical computing experiments (root finding, linear systems, interpolation/integration, ODE solvers) in Python + NumPy + Matplotlib, replacing MATLAB R2019b.
-- [`projects/information-retrieval`](./projects/information-retrieval) — Information retrieval and search engine course experiments: search engine comparison, patent retrieval, CNKI/WoS literature analysis, and review writing with NoteExpress + CiteSpace.
-- [`demos/agri-kg-demo`](./demos/agri-kg-demo) — Agricultural knowledge graph visualization.
-- [`demos/cyber-security-webui`](./demos/cyber-security-webui) — Cyber security Web UI demo with PWA support.
+## 项目索引
 
-## Project Index
+| 学期 | 课程 | 类型 | 路径 | 技术栈 |
+|------|------|------|------|--------|
+| 2026 Spring | 大数据可视化 | Project | [`projects/bigdata-visualization`](./projects/bigdata-visualization) | Vue 3 + TypeScript + ECharts |
+| 2026 Spring | 机器学习 | Project | [`projects/ml-apple-detection`](./projects/ml-apple-detection) | PyTorch + ResNet18 + OpenCV |
+| 2026 Spring | 网络信息安全 | Project | [`projects/network-security`](./projects/network-security) | Kali Linux + nmap + John |
+| 2026 Spring | 遥感图像处理 | Project | [`projects/gis-remote-sensing`](./projects/gis-remote-sensing) | ERDAS 9.2 |
+| 2026 Spring | GIS地图制作 | Project | [`projects/gis-supermap`](./projects/gis-supermap) | SuperMap iDesktop 10 |
+| 2026 Spring | 计算方法 | Project | [`projects/computational-methods`](./projects/computational-methods) | Python + NumPy + Matplotlib |
+| 2026 Spring | 信息检索与搜索引擎 | Project | [`projects/information-retrieval`](./projects/information-retrieval) | HTML5 导航站 |
+| 2026 Spring | 农业信息技术 | Demo | [`demos/agri-kg-demo`](./demos/agri-kg-demo) | HTML5 + CSS3 |
+| 2026 Spring | 网络安全 | Demo | [`demos/cyber-security-webui`](./demos/cyber-security-webui) | HTML5 + CSS3 + PWA |
 
-| Semester | Course | Type | Path | Tech Stack |
-|----------|--------|------|------|------------|
-| 2026 Spring | Big Data Visualization | Project | [`projects/bigdata-visualization`](./projects/bigdata-visualization) | Vue 3 + TypeScript + ECharts + Element Plus |
-| 2026 Spring | Machine Learning | Project | [`projects/ml-apple-detection`](./projects/ml-apple-detection) | PyTorch + ResNet18 + OpenCV |
-| 2026 Spring | Network Information Security | Project | [`projects/network-security`](./projects/network-security) | Kali Linux + nmap + John the Ripper |
-| 2026 Spring | Remote Sensing Image Processing | Project | [`projects/gis-remote-sensing`](./projects/gis-remote-sensing) | ERDAS 9.2 |
-| 2026 Spring | GIS Map Production | Project | [`projects/gis-supermap`](./projects/gis-supermap) | SuperMap iDesktop 10 |
-| 2026 Spring | GIS Lab Navigator | Project | [`projects/gis-lab-navigator`](./projects/gis-lab-navigator) | HTML5 + CSS3 |
-| 2026 Spring | Computational Methods | Project | [`projects/computational-methods`](./projects/computational-methods) | Python + NumPy + SciPy + Matplotlib |
-| 2026 Spring | Information Retrieval | Project | [`projects/information-retrieval`](./projects/information-retrieval) | HTML5 + Web Resources |
-| 2026 Spring | Agricultural Information Technology | Demo | [`demos/agri-kg-demo`](./demos/agri-kg-demo) | HTML5 + CSS3 + Vanilla JS |
-| 2026 Spring | Cyber Security | Demo | [`demos/cyber-security-webui`](./demos/cyber-security-webui) | HTML5 + CSS3 + Vanilla JS + PWA |
+## 环境概览
 
-## Quick Start
+| 环境 | 发行版 | 核心组件 | 状态 |
+|------|--------|----------|------|
+| 大数据 / ML | Ubuntu-24.04 WSL2 | Hadoop 3.4, Spark 4.1, Kafka 4.2(KRaft), PyTorch 2.12 | [VERIFIED] |
+| 网络安全 | kali-linux WSL2 | nmap, john, hping3, dnsutils | [VERIFIED] |
 
+详见 [`docs/ENVIRONMENT.md`](./docs/ENVIRONMENT.md)。
+
+## 快速开始
+
+### 前端项目
 ```bash
-# Install root dependencies
 pnpm install
-
-# Start the bigdata-visualization project
-pnpm dev:visualization
-
-# Build for production
+pnpm dev:visualization    # 大数据可视化
 pnpm build:visualization
 ```
 
-## Repository Structure
+### 计算方法实验（WSL Ubuntu-24.04）
+```bash
+cd projects/computational-methods/src
+python exp1_root_finding.py
+python exp2_linear_systems.py
+python exp3_interpolation_integration.py
+python exp4_ode_solver.py
+```
+
+### ML 实验（WSL Ubuntu-24.04）
+```bash
+cd projects/ml-apple-detection/src
+python train.py --epochs 50 --batch-size 8 --lr 0.001
+tensorboard --logdir=../outputs/runs
+```
+
+### 网络安全实验（WSL kali-linux）
+```bash
+cd /home/zjx/netsec-exp/scripts
+bash exp1-info-collection.sh
+bash exp2-password-cracking.sh
+```
+
+### GIS 导航站
+直接浏览器打开：
+- [`projects/gis-lab-navigator/index.html`](./projects/gis-lab-navigator/index.html)
+- [`projects/information-retrieval/index.html`](./projects/information-retrieval/index.html)
+
+## 仓库结构
 
 ```
 .
-├── packages/                   # Shared packages (future extensions)
-├── projects/                   # Build-required course design projects
-│   ├── bigdata-visualization/  # Academic admin dashboard with data viz
-│   │   ├── src/
-│   │   ├── docs/               # Course design reports
-│   │   └── dist/               # Build output
-│   ├── ml-apple-detection/     # Apple quality classification (PyTorch)
-│   │   ├── data/               # Training and test datasets
-│   │   ├── src/                # train.py, predict.py
-│   │   ├── notebooks/          # Jupyter exploration
-│   │   └── models/             # Saved checkpoints
-│   ├── network-security/       # Network security experiments
-│   │   ├── scripts/            # Experiment shell scripts
-│   │   ├── exp1-info-collection/
-│   │   ├── exp2-password-cracking/
-│   │   ├── exp3-dos-attack/
-│   │   └── exp4-system-hardening/
-│   ├── gis-remote-sensing/     # Remote sensing image processing (ERDAS 9.2)
-│   │   ├── data/               # water.img / 1.img
-│   │   └── README.md           # Experiment guide
-│   ├── gis-supermap/           # Map production (SuperMap iDesktop 10)
-│   │   └── README.md           # Experiment guide
-│   ├── gis-lab-navigator/      # Web portal for GIS experiment links
-│   │   └── index.html          # Navigation page
-│   ├── computational-methods/  # Numerical computing (Python replaces MATLAB)
-│   │   ├── src/                # exp1-4.py
-│   │   ├── outputs/            # Figures and results
-│   │   ├── .vscode/            # VS Code workspace config
-│   │   └── README.md           # Experiment guide
-│   └── information-retrieval/  # Info retrieval & search engine experiments
-│       ├── index.html          # Navigation portal
-│       └── README.md           # Experiment guide
-├── demos/                      # Static classroom demos (open index.html directly)
-│   ├── agri-kg-demo/           # Agricultural knowledge graph visualization
-│   └── cyber-security-webui/   # Cyber security Web UI demo
-├── docs/                       # Course design reports archive
+├── packages/                   # Shared packages (future)
+├── projects/                   # 课程设计项目
+│   ├── bigdata-visualization/  # Vue 3 数据可视化仪表盘
+│   ├── ml-apple-detection/     # PyTorch 苹果质量分类
+│   ├── network-security/       # Kali 网络安全实验脚本
+│   ├── gis-remote-sensing/     # ERDAS 遥感图像处理
+│   ├── gis-supermap/           # SuperMap 地图制作
+│   ├── gis-lab-navigator/      # GIS 实验导航站
+│   ├── computational-methods/  # Python 数值计算实验
+│   └── information-retrieval/  # 信息检索实验导航站
+├── demos/                      # 静态课堂演示
+│   ├── agri-kg-demo/
+│   └── cyber-security-webui/
+├── docs/                       # 课程资料归档
+│   ├── ENVIRONMENT.md          # 环境配置速查
+│   ├── STATUS-2026-05-17.md    # 项目状态与 TODO
+│   ├── ARCHITECTURE-REVIEW-2026-05-18.md  # 架构审视
+│   ├── 课程资料索引.md         # 复习资料目录
 │   ├── 大数据可视化/
 │   ├── 农业信息技术/
-│   ├── 网络安全/
-│   └── ENVIRONMENT.md          # Environment setup reference
-├── package.json                # Workspace root
-└── pnpm-workspace.yaml
+│   └── 网络安全/
+├── .gitattributes              # Git LFS 配置
+└── README.md                   # 本文件
 ```
+
+## 今日工作摘要（2026-05-18）
+
+1. **大数据环境升级** — Spark 4.1.1 / Flink 2.2.1 / Kafka 4.2.0 KRaft / ZooKeeper 3.9.3 / HBase 2.6.2 / Hive 4.2.0
+2. **ML 环境配置** — Python 3.13 + PyTorch 2.12 + OpenCV + Matplotlib + TensorBoard + JupyterLab
+3. **计算方法实验** — 4 个 Python 脚本替代 MATLAB R2019b，匹配教材例题
+4. **GIS 实验** — ERDAS + SuperMap 操作说明 + 导航站
+5. **信息检索实验** — 4 个实验模块导航站
+6. **复习资料归档** — 大数据可视化 + 农业信息技术期末资料（Git LFS）
+7. **架构审视报告** — 仓库优化建议与 Agent 协作方案
 
 ## Topics
 
-`visualization` `education` `engineering` `crud` `typescript` `dashboard` `frontend` `echarts` `admin-system` `vue3` `vite` `element-plus` `pinia`
+`visualization` `education` `engineering` `crud` `typescript` `dashboard` `frontend` `echarts` `admin-system` `vue3` `vite` `element-plus` `pinia` `pytorch` `machine-learning` `computer-vision` `network-security` `kali-linux` `gis` `remote-sensing` `supermap` `numerical-computing` `numpy` `matplotlib` `information-retrieval` `wsl2` `bigdata` `hadoop` `spark` `kafka`
