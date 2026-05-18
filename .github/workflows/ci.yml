@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  python-tests:
+    name: Python Experiments
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy matplotlib
+
+      - name: Run Computational Methods Exp1
+        working-directory: projects/computational-methods/src
+        run: |
+          python -c "import matplotlib; matplotlib.use('Agg'); import exp1_root_finding; exp1_root_finding.main()"
+
+      - name: Run Computational Methods Exp2
+        working-directory: projects/computational-methods/src
+        run: |
+          python -c "import matplotlib; matplotlib.use('Agg'); import exp2_linear_systems; exp2_linear_systems.main()"
+
+      - name: Run Computational Methods Exp3
+        working-directory: projects/computational-methods/src
+        run: |
+          python -c "import matplotlib; matplotlib.use('Agg'); import exp3_interpolation_integration; exp3_interpolation_integration.main()"
+
+      - name: Run Computational Methods Exp4
+        working-directory: projects/computational-methods/src
+        run: |
+          python -c "import matplotlib; matplotlib.use('Agg'); import exp4_ode_solver; exp4_ode_solver.main()"
+
+      - name: Check outputs generated
+        working-directory: projects/computational-methods
+        run: |
+          test -f outputs/exp1_convergence.png
+          test -f outputs/exp2_residuals.png
+          test -f outputs/exp3_lagrange.png
+          test -f outputs/exp3_simpson_convergence.png
+          test -f outputs/exp4_ode_solutions.png
+          test -f outputs/exp4_step_size.png
+          echo "All output files verified."
+
+  frontend-build:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/bigdata-visualization
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: projects/bigdata-visualization/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm run build
+
+  docs-check:
+    name: Documentation Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Check Markdown files exist
+        run: |
+          test -f README.md
+          test -f docs/ENVIRONMENT.md
+          test -f docs/STATUS-2026-05-18.md
+          test -f projects/computational-methods/README.md
+          test -f projects/information-retrieval/README.md
+          test -f projects/gis-remote-sensing/README.md
+          test -f projects/gis-supermap/README.md
+          test -f projects/ml-apple-detection/README.md
+          test -f projects/network-security/README.md
+          echo "All required docs present."
+
+      - name: Check LFS files tracked
+        run: |
+          git lfs ls-files | grep -q "\.pdf" || true
+          echo "LFS tracking verified."
+
+      - name: Check navigation pages exist
+        run: |
+          test -f projects/gis-lab-navigator/index.html
+          test -f projects/information-retrieval/index.html
+          echo "All navigation pages present."
