@@ -25,6 +25,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install numpy scipy matplotlib
 
+      - name: Ensure outputs directory exists
+        working-directory: projects/computational-methods
+        run: mkdir -p outputs
+
       - name: Run Computational Methods Exp1
         working-directory: projects/computational-methods/src
         run: |
@@ -69,8 +73,6 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
