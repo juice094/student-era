@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>信息检索与搜索引擎 — 实验导航站</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --accent2: #238636;
+      --warn: #d29922;
+      --danger: #f85149;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 40px 20px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    header { text-align: center; margin-bottom: 40px; }
+    header h1 { font-size: 2rem; margin-bottom: 10px; }
+    header p { color: var(--muted); font-size: 0.95rem; max-width: 600px; margin: 0 auto; }
+
+    /* 快捷链接栏 */
+    .quick-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 36px;
+      padding: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .quick-bar a {
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: all 0.15s;
+    }
+    .quick-bar a:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* 实验卡片 */
+    .exp-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 24px;
+      transition: border-color 0.2s;
+    }
+    .exp-card:hover { border-color: var(--accent); }
+    .exp-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .exp-header h2 { font-size: 1.2rem; }
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .badge-blue { background: rgba(88,166,255,0.15); color: var(--accent); }
+    .badge-green { background: rgba(35,134,54,0.2); color: #3fb950; }
+    .badge-warn { background: rgba(210,153,34,0.15); color: var(--warn); }
+    .badge-red { background: rgba(248,81,73,0.15); color: var(--danger); }
+
+    .exp-meta { color: var(--muted); font-size: 0.88rem; margin-bottom: 16px; }
+
+    .section-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin: 18px 0 8px;
+    }
+
+    /* 步骤列表 */
+    .step-list { list-style: none; counter-reset: step; }
+    .step-list li {
+      position: relative;
+      padding-left: 32px;
+      margin-bottom: 10px;
+      font-size: 0.92rem;
+    }
+    .step-list li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 1px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--bg);
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 截图提示 */
+    .screenshot-tip {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 16px;
+      background: rgba(210,153,34,0.08);
+      border-left: 3px solid var(--warn);
+      border-radius: 0 8px 8px 0;
+      margin: 12px 0;
+      font-size: 0.88rem;
+    }
+    .screenshot-tip .icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* 链接网格 */
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 8px;
+    }
+    .link-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: all 0.15s;
+    }
+    .link-btn:hover { border-color: var(--accent); background: rgba(88,166,255,0.05); }
+    .link-btn .arrow { color: var(--muted); margin-left: auto; font-size: 0.8rem; }
+
+    /* 工具卡片 */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .tool-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+    }
+    .tool-card h4 { font-size: 0.95rem; margin-bottom: 6px; }
+    .tool-card p { color: var(--muted); font-size: 0.82rem; margin-bottom: 10px; }
+    .tool-card a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.82rem;
+    }
+    .tool-card a:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>信息检索与搜索引擎 — 实验导航站</h1>
+      <p>数据科学与大数据技术专业实验配套资源，涵盖搜索引擎使用、专利检索、文献分析与综述写作四大模块。</p>
+    </header>
+
+    <!-- 快捷入口 -->
+    <div class="section-title" style="text-align:center;margin-bottom:10px;">常用网站快捷入口</div>
+    <div class="quick-bar">
+      <a href="https://www.baidu.com" target="_blank">百度</a>
+      <a href="https://www.sogou.com" target="_blank">搜狗</a>
+      <a href="https://www.so.com" target="_blank">360搜索</a>
+      <a href="https://www.bing.com" target="_blank">Bing必应</a>
+      <a href="https://www.cnki.net" target="_blank">中国知网 CNKI</a>
+      <a href="https://www.webofscience.com" target="_blank">Web of Science</a>
+      <a href="https://www.patexplorer.com" target="_blank">专利探索者</a＞
+      <a href="https://www.inoteexpress.com" target="_blank">NoteExpress</a＾
+      <a href="https://citespace.podia.com" target="_blank">CiteSpace</a>
+    </div>
+
+    <!-- 实验一 -->
+    <div class="exp-card">
+      <div class="exp-header">
+        <h2>实验一：搜索引擎使用</h2>
+        <span class="badge badge-blue">网页操作</span>
+      </div>
+      <div class="exp-meta">掌握常见搜索引擎的使用方法，了解检索语法（双引号、空格、减号等），对比不同引擎的检索结果差异。</div>
+
+      <div class="section-title">实验步骤</div>
+      <ol class="step-list">
+        <li>分别打开 <strong>百度、搜狗、360搜索、Bing必应</strong> 四个搜索引擎。</li>
+        <li>输入同一关键词进行<strong>简单检索</strong>，记录各引擎结果数量与排序差异。</li>
+        <li>使用<strong>双引号精确匹配</strong>（如 <code>"人工智能"</code>），对比与简单检索的结果差异。</li>
+        <li>使用<strong>空格多关键词</strong>（如 <code>人工智能 医疗</code>），观察交集结果。</li>
+        <li>使用<strong>减号排除</strong>（如 <code>人工智能 -游戏</code>），观察排除效果。</li>
+        <li>针对同一索引词，对比四种引擎结果异同，总结各自特点（收录范围、排序算法、广告占比等）。</li>
+        <li>分析各搜索引擎在<strong>网络营销</strong>中的应用场景。</li>
+      </ol>
+
+      <div class="screenshot-tip">
+        <span class="icon">&#128247;</span>
+        <div><strong>截图要求：</strong>每个检索语法对比需截图（简单检索 vs 精确匹配 vs 多关键词 vs 排除），共至少 4 组对比截图。记录各引擎结果数量。</div>
+      </div>
+
+      <div class="section-title">相关链接</div>
+      <div class="link-grid">
+        <a class="link-btn" href="https://www.baidu.com" target="_blank">百度 <span class="arrow">&#8599;</span></a>
+        <a class="link-btn" href="https://www.sogou.com" target="_blank">搜狗 <span class="arrow">&#8599;</span></a>
+        <a class="link-btn" href="https://www.so.com" target="_blank">360搜索 <span class="arrow">&#8599;</span></a>
+        <a class="link-btn" href="https://www.bing.com" target="_blank">Bing必应 <span class="arrow">&#8599;</span></a>
+        <a class="link-btn" href="https://www.google.com" target="_blank">Google（需代理） <span class="arrow">&#8599;</span></a>
+      </div>
+    </div>
+
+    <!-- 实验二 -->
+    <div class="exp-card">
+      <div class="exp-header">
+        <h2>实验二：专利信息检索</h2>
+        <span class="badge badge-blue">网页操作</span>
+      </div>
+      <div class="exp-meta">学习专利数据库检索方法，掌握 IPC 分类号、申请人、发明人等字段的高级检索技巧。</div>
+
+      <div class="section-title">实验步骤</div>
+      <ol class="step-list">
+        <li>访问<strong>国家知识产权局专利检索系统</strong>或<strong>专利探索者</strong>。</li>
+        <li>使用<strong>关键词检索</strong>：输入技术领域关键词，观察结果列表。</li>
+        <li>使用<strong>IPC分类号</strong>进行限定检索（如 G06N 对应人工智能）。</li>
+        <li>使用<strong>高级检索</strong>组合字段：申请人 + 发明人 + 申请日区间。</li>
+        <li>选择一篇目标专利，查看<strong>全文、法律状态、引证文献</strong>。</li>
+        <li>分析该领域的<strong>专利申请趋势</strong>（按年度统计）。</li>
+      </ol>
+
+      <div class="screenshot-tip">
+        <span class="icon">&#128247;</span>
+        <div><strong>截图要求：</strong>高级检索界面截图、专利详情页截图、法律状态截图、年度趋势图截图。</div>
+      </div>
+
+      <div class="section-title">相关链接</div>
+      <div class="link-grid">
+        <a class="link-btn" href="https://pss-system.cponline.cnipa.gov.cn" target="_blank">国家知识产权局专利检索 <span class="arrow">&#8599;</span></a>
+        <a class="link-btn" href="https://www.patexplorer.com" target="_blank">专利探索者 <span class="arrow">&#8599;</span></a>
+        <a class="link-btn" href="https://www.cnipa.gov.cn" target="_blank">国家知识产权局官网 <span class="arrow">&#8599;</span></a>
+        <a class="link-btn" href="https://www.wipo.int/patents/en/" target="_blank">WIPO 国际专利 <span class="arrow">&#8599;</span></a>
+      </div>
+    </div>
+
+    <!-- 实验三 -->
+    <div class="exp-card">
+      <div class="exp-header">
+        <h2>实验三：综合型信息资源检索及分析</h2>
+        <span class="badge badge-blue">网页操作</span>
+        <span class="badge badge-warn">重点实验</span>
+      </div>
+      <div class="exp-meta">综合运用中国知网（CNKI）和 Web of Science 进行中外文文献检索，掌握高级检索、作者检索、机构分析等方法。</div>
+
+      <div class="section-title">Part A — 中国知网 CNKI 检索</div>
+      <ol class="step-list">
+        <li>访问<strong>中国知网</strong>，使用<strong>期刊导航</strong>查找《农业工程学报》。记录：主办单位、复合影响因子、近10年学科分布比例最高的两部分。</li>
+        <li>检索"师尚礼"以甘肃农业大学为第一完成单位发表的期刊：记录总数量、一作数量、一作中被引最高文章、下载最多文章。</li>
+        <li>高级检索：主题/篇名/关键词/摘要/全文分别包含"区块链"并且包含"分布式"，2013-2022年，精确匹配。记录5种检索项的结果条数差异。</li>
+        <li>从结果中找出：被引频次最高文章、下载频次最高文章、北大核心数量、国家自然科学基金支持数量。</li>
+      </ol>
+
+      <div class="section-title">Part B — Web of Science 外文检索</div>
+      <ol class="step-list">
+        <li>以 <strong>Yann LeCun + LeNet</strong> 为检索词，查找相关文献。</li>
+        <li>按"Web of Science 类别"分析学科交叉情况。</li>
+        <li>按"来源出版物"分析该领域主要发表期刊。</li>
+        <li>按"作者"分析主要研究人员。</li>
+        <li>按"机构扩展"分析从事同一研究的其他机构。</li>
+        <li>按"出版年"分析研究进展趋势。</li>
+        <li>以"区块链"为关键词，分析外文期刊分布情况。</li>
+      </ol>
+
+      <div class="screenshot-tip">
+        <span class="icon">&#128247;</span>
+        <div><strong>截图要求：</strong>CNKI 高级检索界面（5种字段）、检索结果列表、单篇详情页（被引/下载）、WoS 分析图表（类别/来源/作者/机构/出版年）。</div>
+      </div>
+
+      <div class="section-title">相关链接</div>
+      <div class="link-grid">
+        <a class="link-btn" href="https://www.cnki.net" target="_blank">中国知网 CNKI <span class="arrow">&#8599;</span></a>
+        <a class="link-btn" href="https://www.webofscience.com" target="_blank">Web of Science <span class="arrow">&#8599;</span></a>
+        <a class="link-btn" href="https://kns.cnki.net/kns8s/navigate?classid=YSTT4HG0" target="_blank">CNKI 高级检索 <span class="arrow">&#8599;</span></a>
+        <a class="link-btn" href="https://www.webofscience.com/wos/woscc/advanced-search" target="_blank">WoS 高级检索 <span class="arrow">&#8599;</span></a>
+      </div>
+    </div>
+
+    <!-- 实验四 -->
+    <div class="exp-card">
+      <div class="exp-header">
+        <h2>实验四：综述写作</h2>
+        <span class="badge badge-green">综合写作</span>
+      </div>
+      <div class="exp-meta">掌握文献管理工具 NoteExpress、知识图谱工具 CiteSpace 和思维导图工具，完成从文献检索到综述撰写的完整流程。</div>
+
+      <div class="section-title">实验步骤</div>
+      <ol class="step-list">
+        <li><strong>安装 NoteExpress</strong>：官网下载，学习数据库新建、题录导入、在线检索、网络捕手插件安装。</li>
+        <li>使用 NoteExpress 完成<strong>题录信息查重、全文下载、笔记及标签</strong>管理。</li>
+        <li>在 Word 中安装 NE 插件，完成<strong>文献引用插入及自动更新</strong>。</li>
+        <li><strong>安装 CiteSpace</strong>：基于综述选题开展文献检索，用聚类分析、时间区图等论证选题意义。</li>
+        <li>使用<strong>笔杆网选题功能</strong>辅助确定综述题目。</li>
+        <li>选用<strong>思维导图工具</strong>（XMind / MindNow / MindManager 等）搭建综述框架。</li>
+        <li><strong>撰写综述</strong>：引用文献准确无误，格式参考《农业工程学报》2024 年版模板。</li>
+      </ol>
+
+      <div class="screenshot-tip">
+        <span class="icon">&#128247;</span>
+        <div><strong>截图要求：</strong>NoteExpress 主界面、题录列表、Word 中 NE 插件引用效果、CiteSpace 聚类图/时间线图、思维导图框架、综述文档封面。</div>
+      </div>
+
+      <div class="section-title">工具下载</div>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h4>NoteExpress</h4>
+          <p>文献管理与论文写作辅助工具，支持题录导入、查重、全文下载、Word 插件引用。</p>
+          <a href="http://www.inoteexpress.com/aegean/" target="_blank">官网下载 &#8599;</a>
+        </div>
+        <div class="tool-card">
+          <h4>CiteSpace</h4>
+          <p>科学知识图谱可视化工具，支持聚类分析、时间线、突现词检测等。</p>
+          <a href="https://citespace.podia.com" target="_blank">官网下载 &#8599;</a>
+        </div>
+        <div class="tool-card">
+          <h4>XMind</h4>
+          <p>思维导图工具，用于搭建综述逻辑框架。</p>
+          <a href="https://www.xmind.cn" target="_blank">官网下载 &#8599;</a>
+        </div>
+        <div class="tool-card">
+          <h4>MindNow</h4>
+          <p>在线思维导图工具，无需安装，支持协作。</p>
+          <a href="https://www.mindnow.cn" target="_blank">官网使用 &#8599;</a>
+        </div>
+        <div class="tool-card">
+          <h4>笔杆网</h4>
+          <p>在线选题辅助与论文写作平台，提供选题分析和参考文献推荐。</p>
+          <a href="https://www.bigan.net" target="_blank">官网使用 &#8599;</a>
+        </div>
+        <div class="tool-card">
+          <h4>《农业工程学报》模板</h4>
+          <p>综述格式参考，官网投稿指南中下载论文写作模板。</p>
+          <a href="https://www.tcsae.org" target="_blank">官网 &#8599;</a>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Student Era — 信息检索与搜索引擎实验导航 | 数据科学与大数据技术系 | 仅供课程学习使用</p>
+    </footer>
+  </div>
+</body>
+</html>

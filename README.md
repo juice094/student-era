@@ -16,6 +16,7 @@
 - [`projects/gis-supermap`](./projects/gis-supermap) — Map production with SuperMap iDesktop 10: data query, buffer analysis, overlay analysis, and thematic mapping.
 - [`projects/gis-lab-navigator`](./projects/gis-lab-navigator) — Web navigation portal for GIS experiments with quick links to software downloads, docs, and tutorials.
 - [`projects/computational-methods`](./projects/computational-methods) — Numerical computing experiments (root finding, linear systems, interpolation/integration, ODE solvers) in Python + NumPy + Matplotlib, replacing MATLAB R2019b.
+- [`projects/information-retrieval`](./projects/information-retrieval) — Information retrieval and search engine course experiments: search engine comparison, patent retrieval, CNKI/WoS literature analysis, and review writing with NoteExpress + CiteSpace.
 - [`demos/agri-kg-demo`](./demos/agri-kg-demo) — Agricultural knowledge graph visualization.
 - [`demos/cyber-security-webui`](./demos/cyber-security-webui) — Cyber security Web UI demo with PWA support.
 
@@ -30,6 +31,7 @@
 | 2026 Spring | GIS Map Production | Project | [`projects/gis-supermap`](./projects/gis-supermap) | SuperMap iDesktop 10 |
 | 2026 Spring | GIS Lab Navigator | Project | [`projects/gis-lab-navigator`](./projects/gis-lab-navigator) | HTML5 + CSS3 |
 | 2026 Spring | Computational Methods | Project | [`projects/computational-methods`](./projects/computational-methods) | Python + NumPy + SciPy + Matplotlib |
+| 2026 Spring | Information Retrieval | Project | [`projects/information-retrieval`](./projects/information-retrieval) | HTML5 + Web Resources |
 | 2026 Spring | Agricultural Information Technology | Demo | [`demos/agri-kg-demo`](./demos/agri-kg-demo) | HTML5 + CSS3 + Vanilla JS |
 | 2026 Spring | Cyber Security | Demo | [`demos/cyber-security-webui`](./demos/cyber-security-webui) | HTML5 + CSS3 + Vanilla JS + PWA |
 
@@ -74,10 +76,13 @@ pnpm build:visualization
 │   │   └── README.md           # Experiment guide
 │   ├── gis-lab-navigator/      # Web portal for GIS experiment links
 │   │   └── index.html          # Navigation page
-│   └── computational-methods/  # Numerical computing (Python replaces MATLAB)
-│       ├── src/                # exp1-4.py
-│       ├── outputs/            # Figures and results
-│       ├── .vscode/            # VS Code workspace config
+│   ├── computational-methods/  # Numerical computing (Python replaces MATLAB)
+│   │   ├── src/                # exp1-4.py
+│   │   ├── outputs/            # Figures and results
+│   │   ├── .vscode/            # VS Code workspace config
+│   │   └── README.md           # Experiment guide
+│   └── information-retrieval/  # Info retrieval & search engine experiments
+│       ├── index.html          # Navigation portal
 │       └── README.md           # Experiment guide
 ├── demos/                      # Static classroom demos (open index.html directly)
 │   ├── agri-kg-demo/           # Agricultural knowledge graph visualization
