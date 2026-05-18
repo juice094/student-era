@@ -10,6 +10,8 @@
 
 **Featured Projects**
 - [`projects/bigdata-visualization`](./projects/bigdata-visualization) — Academic admin dashboard with Vue 3, Vite, TypeScript, ECharts. Features data visualization, complete CRUD, form validation, undo-delete, and enterprise-level engineering practices.
+- [`projects/ml-apple-detection`](./projects/ml-apple-detection) — 8-class apple quality classification using PyTorch and ResNet18. Includes data exploration, training pipeline with TensorBoard, and inference scripts.
+- [`projects/network-security`](./projects/network-security) — Network information security experiments on Kali Linux WSL2. Covers info collection, password cracking, DoS attack demo, and system hardening.
 - [`demos/agri-kg-demo`](./demos/agri-kg-demo) — Agricultural knowledge graph visualization.
 - [`demos/cyber-security-webui`](./demos/cyber-security-webui) — Cyber security Web UI demo with PWA support.
 
@@ -18,6 +20,8 @@
 | Semester | Course | Type | Path | Tech Stack |
 |----------|--------|------|------|------------|
 | 2026 Spring | Big Data Visualization | Project | [`projects/bigdata-visualization`](./projects/bigdata-visualization) | Vue 3 + TypeScript + ECharts + Element Plus |
+| 2026 Spring | Machine Learning | Project | [`projects/ml-apple-detection`](./projects/ml-apple-detection) | PyTorch + ResNet18 + OpenCV |
+| 2026 Spring | Network Information Security | Project | [`projects/network-security`](./projects/network-security) | Kali Linux + nmap + John the Ripper |
 | 2026 Spring | Agricultural Information Technology | Demo | [`demos/agri-kg-demo`](./demos/agri-kg-demo) | HTML5 + CSS3 + Vanilla JS |
 | 2026 Spring | Cyber Security | Demo | [`demos/cyber-security-webui`](./demos/cyber-security-webui) | HTML5 + CSS3 + Vanilla JS + PWA |
 
@@ -40,17 +44,29 @@ pnpm build:visualization
 .
 ├── packages/                   # Shared packages (future extensions)
 ├── projects/                   # Build-required course design projects
-│   └── bigdata-visualization/  # Academic admin dashboard with data viz
-│       ├── src/
-│       ├── docs/               # Course design reports
-│       └── dist/               # Build output
+│   ├── bigdata-visualization/  # Academic admin dashboard with data viz
+│   │   ├── src/
+│   │   ├── docs/               # Course design reports
+│   │   └── dist/               # Build output
+│   ├── ml-apple-detection/     # Apple quality classification (PyTorch)
+│   │   ├── data/               # Training and test datasets
+│   │   ├── src/                # train.py, predict.py
+│   │   ├── notebooks/          # Jupyter exploration
+│   │   └── models/             # Saved checkpoints
+│   └── network-security/       # Network security experiments
+│       ├── scripts/            # Experiment shell scripts
+│       ├── exp1-info-collection/
+│       ├── exp2-password-cracking/
+│       ├── exp3-dos-attack/
+│       └── exp4-system-hardening/
 ├── demos/                      # Static classroom demos (open index.html directly)
 │   ├── agri-kg-demo/           # Agricultural knowledge graph visualization
 │   └── cyber-security-webui/   # Cyber security Web UI demo
 ├── docs/                       # Course design reports archive
 │   ├── 大数据可视化/
 │   ├── 农业信息技术/
-│   └── 网络安全/
+│   ├── 网络安全/
+│   └── ENVIRONMENT.md          # Environment setup reference
 ├── package.json                # Workspace root
 └── pnpm-workspace.yaml
 ```
