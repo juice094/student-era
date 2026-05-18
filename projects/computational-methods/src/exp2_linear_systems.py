@@ -121,43 +121,82 @@ def plot_residuals(jacobi_hist, gs_hist):
 
 
 def main():
-    # TODO: 根据教师给出的具体方程组修改这里
-    # 示例方程组
-    A = np.array([
-        [10, -1, 2, 0],
-        [-1, 11, -1, 3],
-        [2, -1, 10, -1],
-        [0, 3, -1, 8]
-    ], dtype=float)
-    b = np.array([6, 25, -11, 15], dtype=float)
-
-    print("=" * 50)
+    print("=" * 60)
     print("实验二：解线性方程组的直接法与迭代法")
-    print("=" * 50)
+    print("=" * 60)
 
-    # 直接法
-    print("\n【列主元高斯消去法】")
-    x_direct = gauss_elimination_pivot(A, b)
-    print(f"解向量: {x_direct}")
-    print(f"残差 ||Ax - b|| = {np.linalg.norm(A @ x_direct - b):.2e}")
+    # ==================== 例 5.6.1 列主元高斯消去法 ====================
+    A1 = np.array([
+        [12, -3, 3],
+        [-18, 3, -1],
+        [1, 1, 1]
+    ], dtype=float)
+    b1 = np.array([15, -15, 6], dtype=float)
 
-    # 迭代法
-    print("\n【雅可比迭代法】")
-    x_jacobi, hist_j = jacobi(A, b, eps=1e-6)
-    print(f"解向量: {x_jacobi}")
+    print("\n【例 5.6.1 列主元高斯消去法】")
+    print("方程组 Ax = b")
+    print("A = [[12, -3, 3], [-18, 3, -1], [1, 1, 1]]")
+    print("b = [15, -15, 6]")
+
+    x_direct1 = gauss_elimination_pivot(A1, b1)
+    print(f"\n解向量: {x_direct1}")
+    print(f"残差 ||Ax - b|| = {np.linalg.norm(A1 @ x_direct1 - b1):.2e}")
+    print("验证: 精确解应为 [1, 2, 3]")
+
+    # ==================== 例 6.5.1 雅可比迭代法 ====================
+    A2 = np.array([
+        [10, -1, -2],
+        [-1, 10, -2],
+        [-1, -1, 5]
+    ], dtype=float)
+    b2 = np.array([72, 83, 42], dtype=float)
+
+    print("\n【例 6.5.1 雅可比迭代法】")
+    print("方程组 Ax = b")
+    print("A = [[10, -1, -2], [-1, 10, -2], [-1, -1, 5]]")
+    print("b = [72, 83, 42]")
+    print("初值 x0 = [0, 0, 0], 精度 eps = 1e-6")
+
+    x_jacobi, hist_j = jacobi(A2, b2, eps=1e-6)
+    print(f"\n解向量: {x_jacobi}")
     print(f"迭代次数: {len(hist_j)}")
+    print("验证: 精确解应为 [11, 12, 13]")
 
-    print("\n【高斯-塞德尔迭代法】")
-    x_gs, hist_gs = gauss_seidel(A, b, eps=1e-6)
-    print(f"解向量: {x_gs}")
+    # ==================== 例 6.5.2 高斯-塞德尔迭代法 ====================
+    print("\n【例 6.5.2 高斯-塞德尔迭代法】")
+    print("方程组 Ax = b (同上)")
+    print("初值 x0 = [0, 0, 0], 精度 eps = 1e-6")
+
+    x_gs, hist_gs = gauss_seidel(A2, b2, eps=1e-6)
+    print(f"\n解向量: {x_gs}")
     print(f"迭代次数: {len(hist_gs)}")
+    print("验证: 精确解应为 [11, 12, 13]")
 
-    # 与 NumPy 精确解对比
-    x_exact = np.linalg.solve(A, b)
-    print(f"\n【NumPy 参考解】{x_exact}")
-    print(f"直接法误差: {np.linalg.norm(x_direct - x_exact):.2e}")
-    print(f"雅可比法误差: {np.linalg.norm(x_jacobi - x_exact):.2e}")
-    print(f"GS 法误差: {np.linalg.norm(x_gs - x_exact):.2e}")
+    # ==================== 同方程组直接法对比 ====================
+    # 用列主元高斯消去法也解 A2, b2，以便直接法 vs 迭代法对比
+    print("\n【同方程组直接法求解（对比用）】")
+    print("对例 6.5.x 的方程组使用列主元高斯消去法:")
+    x_direct2 = gauss_elimination_pivot(A2, b2)
+    print(f"解向量: {x_direct2}")
+    print(f"残差 ||Ax - b|| = {np.linalg.norm(A2 @ x_direct2 - b2):.2e}")
+
+    # ==================== 结果对比总结 ====================
+    print("\n" + "=" * 60)
+    print("【方法对比总结】")
+    print("=" * 60)
+
+    print("\n方程组 1 (例 5.6.1):")
+    print(f"  列主元高斯消去法: x = {x_direct1}")
+
+    print("\n方程组 2 (例 6.5.x):")
+    print(f"  列主元高斯消去法: x = {x_direct2}")
+    print(f"  雅可比迭代法:      x = {x_jacobi}, 迭代 {len(hist_j)} 次")
+    print(f"  高斯-塞德尔法:     x = {x_gs}, 迭代 {len(hist_gs)} 次")
+
+    print("\n结论:")
+    print(f"  1. 直接法在有限步内理论上可得精确解（此处残差 {np.linalg.norm(A2 @ x_direct2 - b2):.2e}）")
+    print(f"  2. 高斯-塞德尔法比雅可比法收敛更快（{len(hist_gs)} 次 vs {len(hist_j)} 次）")
+    print("  3. 迭代法适合大型稀疏矩阵，直接法适合中低阶稠密方程组")
 
     plot_residuals(hist_j, hist_gs)
 

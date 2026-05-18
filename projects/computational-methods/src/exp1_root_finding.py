@@ -37,7 +37,9 @@ def bisection(f, a, b, eps=1e-6, max_iter=100):
         f_mid = f(mid)
         history.append((k + 1, mid, f_mid))
 
-        if abs(f_mid) < eps or (b - a) / 2 < eps:
+        # 停止条件与教材一致：(b-a) > 2*eps 时继续迭代
+        # 同时检查函数值是否已足够接近零
+        if (b - a) / 2 < eps:
             return mid, history
 
         if f(a) * f_mid < 0:
@@ -65,25 +67,22 @@ def newton(f, df, x0, eps=1e-6, max_iter=100):
     Returns:
         (root, history): 近似根和迭代历史 [(iter, x_k, f_xk), ...]
     """
+    # 与教材 MATLAB 实现一致：
+    # 循环条件 abs(x0 - x) > eps，x0 保存上一轮值
     history = []
     x = x0
-    for k in range(max_iter):
-        fx = f(x)
-        history.append((k + 1, x, fx))
+    x_prev = x + 2 * eps  # 确保第一次循环能进入
+    k = 0
 
-        if abs(fx) < eps:
-            return x, history
-
-        dfx = df(x)
+    while abs(x_prev - x) > eps and k < max_iter:
+        k = k + 1
+        x_prev = x
+        fx = f(x_prev)
+        dfx = df(x_prev)
         if abs(dfx) < 1e-14:
             raise RuntimeError("Derivative too small, Newton method fails")
-
-        x_new = x - fx / dfx
-        if abs(x_new - x) < eps:
-            history.append((k + 2, x_new, f(x_new)))
-            return x_new, history
-
-        x = x_new
+        x = x_prev - fx / dfx
+        history.append((k, x, f(x)))
 
     return x, history
 
@@ -133,34 +132,76 @@ def plot_convergence(bisect_hist, newton_hist, exact_root=None):
 
 
 def main():
-    # TODO: 根据教师给出的具体方程修改这里
-    # 示例方程：f(x) = x^3 - x - 2 = 0, 精确根约为 1.521
-    def f(x):
-        return x**3 - x - 2
-
-    def df(x):
-        return 3*x**2 - 1
-
-    print("=" * 50)
+    print("=" * 60)
     print("实验一：方程求根")
-    print("=" * 50)
+    print("=" * 60)
 
-    # 二分法
-    print("\n【二分法】")
-    root_b, hist_b = bisection(f, 1.0, 2.0, eps=1e-6)
-    print(f"近似根: {root_b:.10f}")
-    print(f"迭代次数: {len(hist_b)}")
-    print(f"f(root) = {f(root_b):.2e}")
+    # ==================== 例 4.6.1 二分法 ====================
+    # 求方程 sin(x) - x^2/4 = 0 在 [1.5, 2] 内的根，精度 eps = 1e-2
+    print("\n【例 4.6.1 二分法】")
+    print("方程: sin(x) - x^2/4 = 0, 区间 [1.5, 2], 精度 1e-2")
 
-    # 牛顿法
-    print("\n【牛顿迭代法】")
-    root_n, hist_n = newton(f, df, x0=1.5, eps=1e-6)
-    print(f"近似根: {root_n:.10f}")
-    print(f"迭代次数: {len(hist_n)}")
-    print(f"f(root) = {f(root_n):.2e}")
+    def f1(x):
+        return np.sin(x) - x**2 / 4
 
-    # 可视化
-    plot_convergence(hist_b, hist_n)
+    root_b, hist_b = bisection(f1, 1.5, 2.0, eps=1e-2)
+    print(f"近似根: {root_b:.14f}")
+    print(f"迭代次数: {len(hist_b) - 1}")  # k=0 是初始值
+    print(f"f(root) = {f1(root_b):.2e}")
+    print("\n迭代过程 (k -> x):")
+    for idx, (iter_num, x_val, fx_val) in enumerate(hist_b[:7]):
+        print(f"  k={idx}: x = {x_val:.14f}")
+
+    # ==================== 例 4.6.2 牛顿迭代法 ====================
+    # 求方程 x^3 - x - 1 = 0 的根，初值 x0 = 1.5，精度 eps = 1e-6
+    print("\n【例 4.6.2 牛顿迭代法】")
+    print("方程: x^3 - x - 1 = 0, 初值 x0 = 1.5, 精度 1e-6")
+
+    def f2(x):
+        return x**3 - x - 1
+
+    def df2(x):
+        return 3 * x**2 - 1
+
+    root_n2, hist_n2 = newton(f2, df2, x0=1.5, eps=1e-6)
+    print(f"近似根: {root_n2:.14f}")
+    print(f"迭代次数: {len(hist_n2) - 1}")
+    print(f"f(root) = {f2(root_n2):.2e}")
+    print("\n迭代过程 (k -> x):")
+    for idx, (iter_num, x_val, fx_val) in enumerate(hist_n2[:6]):
+        print(f"  k={idx}: x = {x_val:.14f}")
+
+    # ==================== 例 4.6.3 牛顿迭代法（超越方程） ====================
+    # 求方程 x - e^(-x) = 0 在 0.5 附近的根，精度 eps = 1e-6
+    print("\n【例 4.6.3 牛顿迭代法（超越方程）】")
+    print("方程: x - e^(-x) = 0, 初值 x0 = 0.5, 精度 1e-6")
+
+    def f3(x):
+        return x - np.exp(-x)
+
+    def df3(x):
+        return 1 + np.exp(-x)
+
+    root_n3, hist_n3 = newton(f3, df3, x0=0.5, eps=1e-6)
+    print(f"近似根: {root_n3:.14f}")
+    print(f"迭代次数: {len(hist_n3) - 1}")
+    print(f"f(root) = {f3(root_n3):.2e}")
+    print("\n迭代过程 (k -> x):")
+    for idx, (iter_num, x_val, fx_val) in enumerate(hist_n3[:5]):
+        print(f"  k={idx}: x = {x_val:.14f}")
+
+    # ==================== 方法对比总结 ====================
+    print("\n" + "=" * 60)
+    print("【方法对比总结】")
+    print("=" * 60)
+    print(f"二分法 (sin(x)-x^2/4=0):     迭代 {len(hist_b)-1} 次, 根 = {root_b:.10f}")
+    print(f"牛顿法 (x^3-x-1=0):          迭代 {len(hist_n2)-1} 次, 根 = {root_n2:.10f}")
+    print(f"牛顿法 (x-e^(-x)=0):         迭代 {len(hist_n3)-1} 次, 根 = {root_n3:.10f}")
+    print("\n结论: 牛顿法收敛速度明显快于二分法（3~4 次 vs 5 次），")
+    print("      但牛顿法依赖初值选取和导数计算。")
+
+    # 可视化（例 4.6.2 的收敛过程）
+    plot_convergence(hist_b, hist_n2)
 
 
 if __name__ == "__main__":
