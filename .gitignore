@@ -36,3 +36,7 @@ runs/
 # Environment / secrets
 .env
 .env.local
+
+# Obsidian (student-era stores source files; primary vault is separate)
+.obsidian/
+*.tmp.*
