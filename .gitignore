@@ -40,3 +40,6 @@ runs/
 # Obsidian (student-era stores source files; primary vault is separate)
 .obsidian/
 *.tmp.*
+
+# Syncthing local config
+.stignore
