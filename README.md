@@ -108,29 +108,25 @@ bash exp2-password-cracking.sh
 │   ├── STATUS-2026-05-18.md    # 项目状态与 TODO
 │   ├── ARCHITECTURE-REVIEW-2026-05-18.md  # 架构审视
 │   ├── 课程资料索引.md         # 复习资料目录
-│   ├── 大数据可视化/
-│   ├── 农业信息技术/
-│   └── 网络安全/
+│   ├── 大数据可视化/           # 已考完课程：课程设计报告 + 复习资料
+│   ├── 农业信息技术/           # 已考完课程：期末复习资料
+│   ├── 计算方法/               # 实验指导书
+│   ├── 信息检索与搜索引擎/     # 实验指导书
+│   ├── 网络信息安全/           # 教材 + 课件 (Git LFS)
+│   └── 网络安全/               # 翻转课堂任务
 ├── .github/workflows/          # GitHub Actions CI
 ├── .gitattributes              # Git LFS 配置
 └── README.md                   # 本文件
 ```
 
-## 今日工作摘要（2026-05-18）
+## 今日工作摘要（2026-05-20）
 
-1. **大数据环境升级** — Spark 4.1.1 / Flink 2.2.1 / Kafka 4.2.0 KRaft / ZooKeeper 3.9.3 / HBase 2.6.2 / Hive 4.2.0
-2. **ML 环境配置** — Python 3.13 + PyTorch 2.12 + OpenCV + Matplotlib + TensorBoard + JupyterLab
-3. **计算方法实验** — 4 个 Python 脚本替代 MATLAB R2019b，匹配教材例题
-4. **GIS 实验** — ERDAS + SuperMap 操作说明 + 导航站
-5. **信息检索实验** — 4 个实验模块导航站
-6. **复习资料归档** — 大数据可视化 + 农业信息技术期末资料（Git LFS）
-7. **架构审视报告** — 仓库优化建议与 Agent 协作方案
-8. **共享基础设施提取** — 暗色主题 CSS + ECharts 配置 + Vue 组件库（pnpm workspace）
-9. **根目录展示页** — 统一项目门户 `index.html`
-10. **CI 工作流** — GitHub Actions 三阶段验证通过
-11. **Release v1.0.0** — 2026 Spring 课程归档发布
-12. **实验指导书归档** — 计算方法 + 信息检索原始文档入库
-13. **仓库门面更新** — README 描述/Topics 同步 GitHub About，根目录 `index.html` 内容刷新
+1. **Vault 课程文件全局整理** — 同一科目集中到 `10-Courses/科目名/` 目录树，考试资料归入 `50-期末复习/`
+2. **网络信息安全资料归档** — 第1-10章教材 PDF + 课件 PPTX 入库（Git LFS），期末复习资料 Markdown 整理完成
+3. **实验指导书归档** — 计算方法、信息检索与搜索引擎实验指导书入库
+4. **已考完课程归档** — 大数据可视化、现代农业信息技术资料确认完整，从课程导航移入归档区
+5. **README 结构更新** — docs/ 目录树同步实际归档内容
+6. **GitHub 推送** — 本地3个 commit + 本次更新推送到 origin/main
 
 ## Topics
 
