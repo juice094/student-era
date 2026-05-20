@@ -1,6 +1,7 @@
 """
 实验二：解线性方程组的直接法与迭代法
 核心算法：列主元高斯消去法、雅可比迭代法、高斯-塞德尔迭代法
+编写者：20231304002_周景潇 日期：2026/05/20
 """
 
 import os
@@ -9,7 +10,12 @@ import numpy as np
 if os.environ.get('DISPLAY') is None and os.name != 'nt':
     import matplotlib
     matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except Exception:
+    # matplotlib may not be available in the environment (or Pylance cannot resolve it).
+    # Fallback: set plt to None and handle plotting functions accordingly.
+    plt = None
 
 
 def gauss_elimination_pivot(A, b):
@@ -106,6 +112,10 @@ def gauss_seidel(A, b, x0=None, eps=1e-6, max_iter=1000):
 
 def plot_residuals(jacobi_hist, gs_hist):
     """绘制迭代法残差收敛曲线"""
+    if plt is None:
+        print("matplotlib is not available; skipping plot_residuals.")
+        return
+
     plt.figure(figsize=(8, 5))
     plt.semilogy(range(1, len(jacobi_hist) + 1), jacobi_hist, 'o-', label='Jacobi', markersize=3)
     plt.semilogy(range(1, len(gs_hist) + 1), gs_hist, 's-', label='Gauss-Seidel', markersize=3)
@@ -115,9 +125,14 @@ def plot_residuals(jacobi_hist, gs_hist):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig('../outputs/exp2_residuals.png', dpi=150)
-    plt.show()
-    print("Figure saved to ../outputs/exp2_residuals.png")
+    out_path = os.path.join(os.path.dirname(__file__), '..', 'outputs', 'exp2_residuals.png')
+    out_dir = os.path.dirname(out_path)
+    os.makedirs(out_dir, exist_ok=True)
+    plt.savefig(out_path, dpi=150)
+    # Only call plt.show() when an interactive display is available
+    if not (os.environ.get('DISPLAY') is None and os.name != 'nt'):
+        plt.show()
+    print(f"Figure saved to {out_path}")
 
 
 def main():

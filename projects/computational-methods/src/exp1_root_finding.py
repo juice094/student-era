@@ -1,16 +1,24 @@
 """
 实验一：方程求根
 核心算法：二分法、牛顿迭代法
+编写者：20231304002_周景潇 日期：2026/05/20
 """
 
 import os
 import numpy as np
+from typing import Any, Optional
 
-# 无图形界面时自动切换 Agg 后端
-if os.environ.get('DISPLAY') is None and os.name != 'nt':
-    import matplotlib
-    matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+plt: Optional[Any] = None
+
+# 无图形界面时自动切换 Agg 后端，并保护性导入 matplotlib.pyplot
+try:
+    # 在无 DISPLAY 的 headless 环境下切换后端
+    if os.environ.get('DISPLAY') is None and os.name != 'nt':
+        import matplotlib  # type: ignore[import]
+        matplotlib.use('Agg')
+    import matplotlib.pyplot as plt  # type: ignore[import]
+except Exception:
+    plt = None
 
 
 def bisection(f, a, b, eps=1e-6, max_iter=100):
@@ -89,6 +97,16 @@ def newton(f, df, x0, eps=1e-6, max_iter=100):
 
 def plot_convergence(bisect_hist, newton_hist, exact_root=None):
     """绘制两种方法的收敛过程对比"""
+    # 保护性检查：matplotlib 是否可用
+    if plt is None:
+        print("Plotting not available (matplotlib not imported)")
+        return
+
+    # 防止传入空的迭代历史导致 zip(*...) 失败
+    if not bisect_hist or not newton_hist:
+        print("Insufficient history data for plotting")
+        return
+
     fig, axes = plt.subplots(1, 2, figsize=(12, 4))
 
     # 左图：迭代过程中的近似根
@@ -125,10 +143,22 @@ def plot_convergence(bisect_hist, newton_hist, exact_root=None):
     ax.legend()
     ax.grid(True)
 
+    # 使用 fig（避免静态分析报 unused variable）并进行保护性绘图
+    fig.suptitle('Convergence Comparison')
     plt.tight_layout()
-    plt.savefig('../outputs/exp1_convergence.png', dpi=150)
-    plt.show()
-    print("Figure saved to ../outputs/exp1_convergence.png")
+    # 确保输出目录存在
+    out_dir = os.path.join(os.path.dirname(__file__), '..', 'outputs')
+    try:
+        os.makedirs(out_dir, exist_ok=True)
+        out_path = os.path.join(out_dir, 'exp1_convergence.png')
+        plt.savefig(out_path, dpi=150)
+        try:
+            plt.show()
+        except Exception:
+            pass
+        print(f"Figure saved to {out_path}")
+    except Exception:
+        print("Failed to save figure in this environment")
 
 
 def main():
@@ -146,11 +176,11 @@ def main():
 
     root_b, hist_b = bisection(f1, 1.5, 2.0, eps=1e-2)
     print(f"近似根: {root_b:.14f}")
-    print(f"迭代次数: {len(hist_b) - 1}")  # k=0 是初始值
+    print(f"迭代次数: {len(hist_b)}")
     print(f"f(root) = {f1(root_b):.2e}")
     print("\n迭代过程 (k -> x):")
-    for idx, (iter_num, x_val, fx_val) in enumerate(hist_b[:7]):
-        print(f"  k={idx}: x = {x_val:.14f}")
+    for k, x_val, _ in hist_b[:7]:
+        print(f"  k={k}: x = {x_val:.14f}")
 
     # ==================== 例 4.6.2 牛顿迭代法 ====================
     # 求方程 x^3 - x - 1 = 0 的根，初值 x0 = 1.5，精度 eps = 1e-6
@@ -165,11 +195,11 @@ def main():
 
     root_n2, hist_n2 = newton(f2, df2, x0=1.5, eps=1e-6)
     print(f"近似根: {root_n2:.14f}")
-    print(f"迭代次数: {len(hist_n2) - 1}")
+    print(f"迭代次数: {len(hist_n2)}")
     print(f"f(root) = {f2(root_n2):.2e}")
     print("\n迭代过程 (k -> x):")
-    for idx, (iter_num, x_val, fx_val) in enumerate(hist_n2[:6]):
-        print(f"  k={idx}: x = {x_val:.14f}")
+    for k, x_val, _ in hist_n2[:6]:
+        print(f"  k={k}: x = {x_val:.14f}")
 
     # ==================== 例 4.6.3 牛顿迭代法（超越方程） ====================
     # 求方程 x - e^(-x) = 0 在 0.5 附近的根，精度 eps = 1e-6
@@ -184,11 +214,11 @@ def main():
 
     root_n3, hist_n3 = newton(f3, df3, x0=0.5, eps=1e-6)
     print(f"近似根: {root_n3:.14f}")
-    print(f"迭代次数: {len(hist_n3) - 1}")
+    print(f"迭代次数: {len(hist_n3)}")
     print(f"f(root) = {f3(root_n3):.2e}")
     print("\n迭代过程 (k -> x):")
-    for idx, (iter_num, x_val, fx_val) in enumerate(hist_n3[:5]):
-        print(f"  k={idx}: x = {x_val:.14f}")
+    for k, x_val, _ in hist_n3[:5]:
+        print(f"  k={k}: x = {x_val:.14f}")
 
     # ==================== 方法对比总结 ====================
     print("\n" + "=" * 60)
