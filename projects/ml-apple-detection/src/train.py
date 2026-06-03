@@ -8,6 +8,7 @@ Apple Quality Classification - Training Script
 import os
 import sys
 import time
+import json
 import argparse
 from pathlib import Path
 
@@ -171,13 +172,32 @@ def main():
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)
 
     # TensorBoard
-    writer = SummaryWriter(log_dir=OUTPUT_DIR / 'runs' / time.strftime('%Y%m%d_%H%M%S'))
+    run_timestamp = time.strftime('%Y%m%d_%H%M%S')
+    writer = SummaryWriter(log_dir=OUTPUT_DIR / 'runs' / run_timestamp)
+
+    # Text log file for course submission
+    log_file = OUTPUT_DIR / f'training_log_{run_timestamp}.txt'
+    metrics_file = OUTPUT_DIR / f'metrics_{run_timestamp}.json'
 
     # Training loop
     best_val_acc = 0.0
+    history = []
     print(f"\n{'='*50}")
     print("Starting training...")
     print(f"{'='*50}\n")
+
+    # Write log header
+    with open(log_file, 'w', encoding='utf-8') as lf:
+        lf.write(f"Apple Quality Detection - Training Log\n")
+        lf.write(f"Run Timestamp: {run_timestamp}\n")
+        lf.write(f"Model: ResNet18 (pretrained)\n")
+        lf.write(f"Epochs: {args.epochs}, Batch Size: {args.batch_size}, LR: {args.lr}\n")
+        lf.write(f"Train Samples: {len(train_dataset)}, Val Samples: {len(val_dataset)}\n")
+        lf.write(f"Classes: {CLASS_NAMES}\n")
+        lf.write(f"Device: {device}\n")
+        lf.write("=" * 70 + "\n")
+        lf.write(f"{'Epoch':>6} | {'Train Loss':>10} | {'Train Acc':>9} | {'Val Loss':>10} | {'Val Acc':>9} | {'LR':>12} | {'Best':>4}\n")
+        lf.write("-" * 70 + "\n")
 
     for epoch in range(args.epochs):
         print(f"\nEpoch {epoch+1}/{args.epochs}")
@@ -195,12 +215,36 @@ def main():
         writer.add_scalar('Accuracy/val', val_acc, epoch)
         writer.add_scalar('LR', optimizer.param_groups[0]['lr'], epoch)
 
+        is_best = val_acc > best_val_acc
+        if is_best:
+            best_val_acc = val_acc
+
+        # Print to console
         print(f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.2f}%")
         print(f"Val Loss:   {val_loss:.4f} | Val Acc:   {val_acc:.2f}%")
+        if is_best:
+            print(f"Saved best model (val_acc: {val_acc:.2f}%)")
+
+        # Write to text log
+        with open(log_file, 'a', encoding='utf-8') as lf:
+            lr_val = optimizer.param_groups[0]['lr']
+            lf.write(f"{epoch+1:6d} | {train_loss:10.4f} | {train_acc:9.2f}% | "
+                     f"{val_loss:10.4f} | {val_acc:9.2f}% | {lr_val:12.6f} | "
+                     f"{'*' if is_best else '':4s}\n")
+
+        # Append to history for JSON export
+        history.append({
+            'epoch': epoch + 1,
+            'train_loss': train_loss,
+            'train_acc': train_acc,
+            'val_loss': val_loss,
+            'val_acc': val_acc,
+            'lr': optimizer.param_groups[0]['lr'],
+            'is_best': is_best,
+        })
 
         # Save best model
-        if val_acc > best_val_acc:
-            best_val_acc = val_acc
+        if is_best:
             model_path = MODEL_DIR / 'best_model.pth'
             torch.save({
                 'epoch': epoch,
@@ -209,9 +253,35 @@ def main():
                 'val_acc': val_acc,
                 'class_names': CLASS_NAMES,
             }, model_path)
-            print(f"Saved best model (val_acc: {val_acc:.2f}%)")
 
     writer.close()
+
+    # Save JSON metrics
+    with open(metrics_file, 'w', encoding='utf-8') as f:
+        json.dump({
+            'run_timestamp': run_timestamp,
+            'config': {
+                'epochs': args.epochs,
+                'batch_size': args.batch_size,
+                'lr': args.lr,
+                'val_split': args.val_split,
+                'seed': args.seed,
+            },
+            'dataset': {
+                'train_size': len(train_dataset),
+                'val_size': len(val_dataset),
+                'classes': CLASS_NAMES,
+            },
+            'best_val_acc': best_val_acc,
+            'history': history,
+        }, f, ensure_ascii=False, indent=2)
+
+    # Write log footer
+    with open(log_file, 'a', encoding='utf-8') as lf:
+        lf.write("=" * 70 + "\n")
+        lf.write(f"Best Validation Accuracy: {best_val_acc:.2f}%\n")
+        lf.write(f"Log saved to: {log_file}\n")
+        lf.write(f"Metrics saved to: {metrics_file}\n")
 
     # Save final model
     final_path = MODEL_DIR / 'final_model.pth'

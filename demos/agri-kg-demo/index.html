@@ -26,6 +26,7 @@
         <a href="#security">安全分析</a>
         <a href="#problems">现存问题</a>
         <a href="#trends">发展趋势</a>
+        <a href="#cross-domain">跨领域借鉴</a>
         <a href="#maturity">成熟度矩阵</a>
         <a href="#quiz">课堂互动</a>
     </div>
@@ -245,9 +246,63 @@
             </div>
         </div>
 
+        <div class="section-header" style="margin-top:2.5rem;">
+            <h2><span class="section-num"></span>多模态诊断交互演示</h2>
+            <p>病叶图像 → YOLO 检测 → 知识图谱检索 → 联合诊断报告的端到端模拟</p>
+        </div>
+        <div class="card fade-in" style="padding:0; overflow:hidden;">
+            <div id="multimodal-demo" style="padding:1.5rem;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+                    <div style="display:flex; flex-direction:column; gap:1rem;">
+                        <div style="background:var(--bg); border-radius:var(--radius); padding:1rem; text-align:center; border:2px dashed var(--border); min-height:180px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:0.75rem;">
+                            <div id="demo-img-placeholder" style="font-size:3rem;">🌿</div>
+                            <div style="font-size:0.8125rem; color:var(--text-secondary);">咖啡病叶样本（占位）</div>
+                            <div id="demo-bbox" style="display:none; position:relative; width:100%; height:120px; background:#f8fafc; border-radius:var(--radius-sm);">
+                                <div style="position:absolute; left:30%; top:20%; width:40%; height:50%; border:2px solid var(--danger); border-radius:4px; display:flex; align-items:center; justify-content:center; background:rgba(220,38,38,0.1); font-size:0.6875rem; color:var(--danger); font-weight:700;">病斑区域</div>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:0.5rem;">
+                            <button class="demo-btn" id="demo-start" onclick="runMultimodalDemo()">▶ 开始诊断流程</button>
+                            <button class="demo-btn secondary" id="demo-reset" onclick="resetMultimodalDemo()">↺ 重置</button>
+                        </div>
+                    </div>
+                    <div id="demo-steps" style="display:flex; flex-direction:column; gap:0.75rem;">
+                        <div class="demo-step" id="step-1">
+                            <div class="demo-step-badge">1</div>
+                            <div>
+                                <div class="demo-step-title">YOLOv8 病斑检测</div>
+                                <div class="demo-step-desc">检测叶片病斑位置、面积、颜色特征</div>
+                            </div>
+                        </div>
+                        <div class="demo-step" id="step-2">
+                            <div class="demo-step-badge">2</div>
+                            <div>
+                                <div class="demo-step-title">特征向量提取</div>
+                                <div class="demo-step-desc">病斑图像 → CLIP/ViT 特征向量（768-dim）</div>
+                            </div>
+                        </div>
+                        <div class="demo-step" id="step-3">
+                            <div class="demo-step-badge">3</div>
+                            <div>
+                                <div class="demo-step-title">知识图谱检索</div>
+                                <div class="demo-step-desc">向量相似度匹配 → 检索"咖啡-锈病-病斑特征"节点</div>
+                            </div>
+                        </div>
+                        <div class="demo-step" id="step-4">
+                            <div class="demo-step-badge">4</div>
+                            <div>
+                                <div class="demo-step-title">LLM 联合诊断报告</div>
+                                <div class="demo-step-desc">融合视觉置信度（0.91）与文本抽取置信度（0.85）→ 生成防治建议</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="callout callout-info fade-in" style="margin-top: 1.5rem;">
             <div class="callout-title">📎 教学映射</div>
-            3.1 对应文档第二章"检索增强的架构升级"的直接应用；3.2 与 3.3 对应文档第二章末尾提到的 YOLOv8+RAG 与多模态扩展方向，在网页中升格为独立小节以强调"从实验室到田间"的落地逻辑。
+            点击"开始诊断流程"按钮，观察四步骤的逐步高亮。实际系统中，步骤1-3为后台自动执行，步骤4为农户可见的最终输出。此演示帮助学生理解"视觉-文本联合推理"不是黑箱，而是可拆解的流水线。
         </div>
     </div>
 </section>
@@ -300,6 +355,28 @@
                 </div>
                 <div class="arch-compare-label" style="background: #f0fdf4; color: #14532d;">
                     <strong>优势：</strong>错误可定位至"检索策略选择错误"或"Cypher生成错误"，准确率提升至 86%
+                </div>
+            </div>
+
+            <div class="arch-box fade-in">
+                <div class="arch-title">AgenticGraphRAG + Reflective（2026）</div>
+                <div class="arch-flow">
+                    <div class="arch-node">用户查询：小麦叶子发黄怎么办？</div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-node highlight">ReAct Planner + Cypher 生成</div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-node"><span style="color:var(--danger);">❌ Cypher 语法错误</span>
+                        <div class="arch-annotation">缺少 RETURN 子句，触发修复模式</div>
+                    </div>
+                    <div class="arch-arrow">↺ 修复重试（最多 3 次）</div>
+                    <div class="arch-node highlight">✅ Cypher 修正成功 / 降级 RAG</div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-node">LLM 生成答案 + 溯源链路</div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-node highlight">服务不中断（容错+降级）</div>
+                </div>
+                <div class="arch-compare-label" style="background: #eff6ff; color: #1e3a5f;">
+                    <strong>迁移自 Zephyrus：</strong>执行→观察→修正的反思循环，确保 Cypher 错误或检索失败时自动恢复
                 </div>
             </div>
         </div>
@@ -448,6 +525,17 @@
             </div>
         </div>
 
+        <div class="chart-box chart-full fade-in" style="margin-top:1.5rem;">
+            <div class="chart-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                部署方式成本对比（年运营估算）
+            </div>
+            <div id="chart-deploy" style="width:100%; height:320px;"></div>
+            <div class="chart-caption">
+                * 纯云端 API：按查询量计费；混合架构：本地硬件一次性投入 + 低频云端 Fallback；纯本地：仅硬件与电费。数据为县级农技站规模估算。
+            </div>
+        </div>
+
         <div class="cost-panel fade-in">
             <div class="cost-panel-title">💰 成本速算：建一个县域级农业 KG 需要多少投入？</div>
             <div class="cost-row">
@@ -514,6 +602,15 @@
                     <li><strong>应对：</strong>边缘 Fallback 策略（本地 7B 模型兜底）+ 读写权限矩阵 + 流量限速</li>
                 </ul>
             </div>
+            <div class="security-agri-card fade-in">
+                <div class="security-agri-title">🔒 代码执行沙盒安全</div>
+                <ul class="security-agri-list">
+                    <li><strong>代码注入攻击：</strong>LLM 生成的 Python 代码可能包含 <code>os.system("rm -rf /")</code> 或恶意网络请求，在自动执行环境中造成数据删除或服务劫持</li>
+                    <li><strong>资源滥用：</strong>无限循环或大规模数据加载耗尽服务器资源，农忙期咨询高峰时引发拒绝服务</li>
+                    <li><strong>数据泄露：</strong>代码中硬编码数据库连接字符串或 API Key，被日志系统记录后泄露敏感农业数据</li>
+                    <li><strong>应对：</strong>Docker/Firejail 沙箱隔离 + 30 秒执行超时 + 禁止网络出网 + 敏感库白名单（仅允许 xarray、neo4j 等）</li>
+                </ul>
+            </div>
         </div>
 
         <div class="card fade-in" style="margin-top: 1.5rem; border-left: 3px solid var(--danger);">
@@ -523,7 +620,7 @@
             </div>
             <p style="font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.7;">
                 对于涉及农药推荐、病害诊断等<strong>高风险决策</strong>的农业场景，工具执行审批（Manual Approval）不应被视为性能损耗，而是安全刚需。
-                建议落地时至少配置：<strong>① Cypher 查询的只读/读写权限矩阵；② 敏感操作的二次确认流程；③ MCP 工具描述的数字签名校验。</strong>
+                建议落地时至少配置：<strong>① Cypher 查询的只读/读写权限矩阵；② 敏感操作的二次确认流程；③ MCP 工具描述的数字签名校验；④ Python 代码执行沙箱与超时熔断。</strong>
             </p>
         </div>
     </div>
@@ -679,6 +776,128 @@
     </div>
 </section>
 
+<section id="cross-domain">
+    <div class="container">
+        <div class="section-header">
+            <h2><span class="section-num">10</span>跨领域方法论借鉴：从气象到农业</h2>
+            <p>UC San Diego Zephyrus 气象智能体框架对农业知识图谱 Agent 架构的迁移启示</p>
+        </div>
+
+        <div class="callout callout-info fade-in" style="margin-bottom:1.5rem;">
+            <div class="callout-title">📎 核心认知</div>
+            Zephyrus 解决的是"LLM 看不懂高维栅格数据"的问题——让 LLM 不写答案、写代码，代码去操纵数据。农业 KG 面临完全同构的问题：LLM 不直接读遥感 HDF5、不直接查 Neo4j，而是通过<strong>代码中介</strong>完成交互。
+        </div>
+
+        <div class="concept-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="card concept-card fade-in">
+                <div class="card-header">
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <div class="concept-icon" style="background:#f0fdf4;">📝</div>
+                        <div>
+                            <div class="card-title">代码中介交互</div>
+                            <div class="card-subtitle">Code-as-Mediator</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="concept-def">
+                    LLM 不直接理解 GRIB/NetCDF/HDF5，而是生成 Python 代码调用 GDAL/xarray/Neo4j 驱动。农业场景中，LLM 生成 Cypher 查询代码或 GDAL 裁剪脚本，<strong>代码出错时可重试、可降级</strong>，而非直接生成错误答案。
+                </div>
+                <div class="concept-highlight">Zephyrus-Reflective：执行→观察→修正循环</div>
+            </div>
+            <div class="card concept-card fade-in">
+                <div class="card-header">
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <div class="concept-icon" style="background:#eff6ff;">🔄</div>
+                        <div>
+                            <div class="card-title">多轮反思循环</div>
+                            <div class="card-subtitle">Reflective Execution</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="concept-def">
+                    Zephyrus 的 Agent 不一次出结果，而是<strong>执行代码→分析输出→发现错误→修正重试</strong>。农业 KG 中，Cypher 生成错误时自动进入修复模式（至多 3 次重试），失败后降级为向量检索 + 生成摘要的 RAG 模式。
+                </div>
+                <div class="concept-highlight">正确率提升：Direct +15% / Reflective +35~44%</div>
+            </div>
+            <div class="card concept-card fade-in">
+                <div class="card-header">
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <div class="concept-icon" style="background:#fffbeb;">🗺️</div>
+                        <div>
+                            <div class="card-title">地理语义化</div>
+                            <div class="card-subtitle">Geo-Semantic Resolution</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="concept-def">
+                    "京津冀"→坐标掩膜→ERA5 数据裁剪。迁移至农业：<strong>"华北冬小麦区"→自动加载对应土壤类型、气象站数据、历史产量</strong>。模糊地理表述不再需要用户手动输入经纬度。
+                </div>
+                <div class="concept-highlight">底层：GeoPandas + Nominatim + 农业区划库</div>
+            </div>
+            <div class="card concept-card fade-in">
+                <div class="card-header">
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <div class="concept-icon" style="background:#fef2f2;">📊</div>
+                        <div>
+                            <div class="card-title">基准分级设计</div>
+                            <div class="card-subtitle">Benchmark Tiering</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="concept-def">
+                    ZephyrusBench 的 4 级难度金字塔（基础查询→高级预报→极端事件→反事实推理）可直接启发农业 Agent 的评估体系：基础查询→病害诊断→产量预测→反事实农艺决策。
+                </div>
+                <div class="concept-highlight">农业版 AgriBench 待构建</div>
+            </div>
+        </div>
+
+        <div class="card fade-in" style="margin-top:1.5rem;">
+            <div style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;">🔀 架构迁移映射：气象 Zephyrus → 农业 KG Agent</div>
+            <table class="compare-table" style="margin-top:0;">
+                <thead>
+                    <tr>
+                        <th style="width:20%;">Zephyrus 组件（气象）</th>
+                        <th style="width:40%;">功能描述</th>
+                        <th style="width:40%;">农业 KG 迁移映射</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>WeatherBench 2 数据集</strong></td>
+                        <td>ERA5 再分析数据接口，全球 0.25° 分辨率</td>
+                        <td class="compare-win">农业知识图谱（Neo4j）+ 遥感数据仓库（HDF5/GeoTIFF）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GeoQuery 地理查询</strong></td>
+                        <td>"京津冀"→坐标掩膜→数据裁剪</td>
+                        <td class="compare-win">"华北冬小麦区"→农业区划掩膜→加载土壤/气象/产量数据</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Weather Forecasting</strong></td>
+                        <td>中期天气预报（1h~15 天）</td>
+                        <td class="compare-win">作物生长模型（APSIM/DSSAT）调用 + 病虫害发生期预测</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Climate Simulation</strong></td>
+                        <td>反事实推理（"如果没有厄尔尼诺..."）</td>
+                        <td class="compare-win">农艺反事实（"如果提前 7 天灌溉..."）+ 政策影响模拟</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Climatology 统计</strong></td>
+                        <td>历史均值、极值、分位数查询</td>
+                        <td class="compare-win">历史产量均值、病虫害爆发频率、气候区划统计</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ZephyrusWorld 沙盒</strong></td>
+                        <td>FastAPI 后端，LLM 生成 Python 代码执行</td>
+                        <td class="compare-win">农业 AgentWorld：Cypher 查询 + GDAL 裁剪 + 作物模型 API 的统一沙盒</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
 <section id="maturity" style="background: white;">
     <div class="container">
         <div class="section-header">
@@ -693,6 +912,7 @@
                     <th>时间线</th>
                     <th>成熟度</th>
                     <th>本文定位</th>
+                    <th style="min-width:200px;">课程模块映射</th>
                     <th>文档批注</th>
                 </tr>
             </thead>
@@ -702,6 +922,7 @@
                     <td>2024–2025</td>
                     <td><span class="maturity-dot dot-green"></span>已验证</td>
                     <td>小麦纹枯病案例实测基础</td>
+                    <td><span class="badge badge-green">模块2</span> 农业文本信息抽取</td>
                     <td style="color: var(--text-muted); max-width: 280px;">数据可信，但需补充 F1/召回率及错误分布</td>
                 </tr>
                 <tr>
@@ -709,6 +930,7 @@
                     <td>2025 年底</td>
                     <td><span class="maturity-dot dot-yellow"></span>单领域验证</td>
                     <td>建议优化方向（水稻/小麦）</td>
+                    <td><span class="badge badge-green">模块2</span> 递进提示设计</td>
                     <td style="color: var(--text-muted); max-width: 280px;">实体属性 F1 85.1% / 三元组 F1 81.4% 可信，但缺乏跨作物泛化实验</td>
                 </tr>
                 <tr>
@@ -716,6 +938,7 @@
                     <td>2025 年底</td>
                     <td><span class="maturity-dot dot-yellow"></span>单领域验证</td>
                     <td>建议维护机制</td>
+                    <td><span class="badge badge-blue">模块6</span> 知识图谱增量维护</td>
                     <td style="color: var(--text-muted); max-width: 280px;">主/次属性概念清晰，状态机未闭合</td>
                 </tr>
                 <tr>
@@ -723,6 +946,7 @@
                     <td>2025 年底</td>
                     <td><span class="maturity-dot dot-yellow"></span>单领域验证</td>
                     <td>检索架构升级参考</td>
+                    <td><span class="badge badge-green">模块3</span> RAG与检索增强</td>
                     <td style="color: var(--text-muted); max-width: 280px;">需补充与 LightRAG/HippoRAG2 的对比数据</td>
                 </tr>
                 <tr>
@@ -730,6 +954,7 @@
                     <td>2024–2026</td>
                     <td><span class="maturity-dot dot-yellow"></span>工具链完善中</td>
                     <td>工程集成标准化路径</td>
+                    <td><span class="badge badge-blue">模块5</span> MCP协议集成</td>
                     <td style="color: var(--text-muted); max-width: 280px;">200+ 社区服务器，但农业适配刚起步</td>
                 </tr>
                 <tr>
@@ -737,6 +962,7 @@
                     <td>2026.04</td>
                     <td><span class="maturity-dot dot-red"></span>刚提出</td>
                     <td>必须正视的安全约束</td>
+                    <td><span class="badge badge-red">模块7</span> 安全与可信AI</td>
                     <td style="color: var(--text-muted); max-width: 280px;">38 种威胁通用描述，农业场景攻击向量待建模</td>
                 </tr>
                 <tr>
@@ -744,6 +970,7 @@
                     <td>2025</td>
                     <td><span class="maturity-dot dot-yellow"></span>具体案例存在</td>
                     <td>多模态扩展参考实现</td>
+                    <td><span class="badge badge-blue">模块4</span> 多模态融合</td>
                     <td style="color: var(--text-muted); max-width: 280px;">咖啡病害案例，跨作物迁移成本未评估</td>
                 </tr>
                 <tr>
@@ -751,7 +978,16 @@
                     <td>2026</td>
                     <td><span class="maturity-dot dot-red"></span>建议性</td>
                     <td>成本优化的工程思路</td>
+                    <td><span class="badge badge-gray">模块5</span> 边缘部署</td>
                     <td style="color: var(--text-muted); max-width: 280px;">1.5B–7B 本地模型 + MCP 云端 Fallback，无实测</td>
+                </tr>
+                <tr>
+                    <td><strong>Zephyrus 代码中介</strong></td>
+                    <td>2025</td>
+                    <td><span class="maturity-dot dot-yellow"></span>气象领域验证</td>
+                    <td>方法论借鉴</td>
+                    <td><span class="badge badge-blue">模块3</span> Agent架构设计</td>
+                    <td style="color: var(--text-muted); max-width: 280px;">LLM 生成 Python 代码操纵气象数据，农业迁移需重新封装工具集</td>
                 </tr>
             </tbody>
         </table>
@@ -824,8 +1060,8 @@
 <footer>
     <div class="container">
         <p class="footer-title">农业知识图谱技术演进 · 课堂演示版</p>
-        <p>基于《基于大语言模型的农业知识图谱自动构建》报告 | 案例来源：刘珂艺（2024.12）</p>
-        <p style="margin-top: 0.75rem; font-size: 0.75rem; opacity: 0.5;">生成时间：2026-04-29 | 优化版本：v2（三视角教学设计）</p>
+        <p>基于《基于大语言模型的农业知识图谱自动构建》报告 | 案例来源：<a href="https://kns.cnki.net/kcms2/article/abstract?v=pcbjM8AHIkPla2kt3qO-KSqhasuk6HWJoeKMtJaAgHxV08qn9YpYjKUqknRkvj1pkKmS4rPadfvZykasSNe-Rz7YSOm_eRy0LN0L2ArmXjfqBUzRppzwoWQZyaiQuwjxV10kp5KyiwILwSOtZm4viktScQ93aWrdlwig8ADDRVByG1fitD2-yvye7cJYN2pu&uniplatform=NZKPT&language=CHS" target="_blank" style="color:#94a3b8; text-decoration:underline;">刘珂艺（2024.12）- CNKI</a></p>
+        <p style="margin-top: 0.75rem; font-size: 0.75rem; opacity: 0.5;">生成时间：2026-04-29 | 优化版本：v3（Zephyrus跨领域借鉴 + 多模态演示 + 课程模块映射）</p>
     </div>
 </footer>
 

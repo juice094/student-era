@@ -30,9 +30,11 @@ ml-apple-detection/
 ├── notebooks/
 │   └── exploration.ipynb   # Data exploration notebook
 ├── src/
-│   ├── train.py            # Training script
-│   └── predict.py          # Inference script
-├── outputs/                # Training logs and outputs
+│   ├── train.py            # Training script (with text log export)
+│   ├── predict.py          # Inference script
+│   └── evaluate.py         # Validation evaluation & confusion matrix
+├── outputs/                # Training logs, metrics JSON, and text logs
+├── reports/                # Experiment report and generated figures
 ├── requirements.txt        # Python dependencies
 └── README.md               # This file
 ```
@@ -84,7 +86,18 @@ python train.py --epochs 50 --batch-size 8 --lr 0.001
 tensorboard --logdir=../outputs/runs
 ```
 
-### 3. Prediction
+### 3. Evaluation (Confusion Matrix & Per-Class Metrics)
+
+```bash
+cd src
+python evaluate.py --model ../models/best_model.pth --val-split 0.2
+```
+
+Outputs:
+- Console: confusion matrix, classification report, overall accuracy
+- `reports/figures/confusion_matrix.png`
+
+### 4. Prediction
 
 **Single image:**
 ```bash
@@ -95,6 +108,26 @@ python predict.py ../data/test/image.jpg --model ../models/best_model.pth
 ```bash
 python predict.py ../data/test --model ../models/best_model.pth --output ../outputs/predictions.json
 ```
+
+### 5. Generate Report Figures
+
+After training, generate loss/accuracy/lr curves for the experiment report:
+
+```bash
+cd reports
+python generate_plots.py
+```
+
+Outputs to `reports/figures/`:
+- `loss_curve.png`
+- `accuracy_curve.png`
+- `lr_curve.png`
+
+Also prints a markdown-ready summary table for pasting into the report.
+
+### 6. Experiment Report
+
+See `reports/experiment_report.md` for the report template. Fill in the results sections after training.
 
 ## Model Architecture
 

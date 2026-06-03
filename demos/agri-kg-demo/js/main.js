@@ -73,6 +73,20 @@ const chartConfigs = [
                 { name: 'LLM模拟查询', type: 'bar', data: [null, null, null, 89.33], itemStyle: { color: '#0369a1', borderRadius: [4, 4, 0, 0] }, label: { show: true, formatter: '{c}%', position: 'top', fontSize: 10 } }
             ]
         }
+    },
+    {
+        id: 'chart-deploy',
+        option: {
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            legend: { data: ['年运营成本(元)', '初始硬件投入(元)'], bottom: 0, textStyle: { fontSize: 11 } },
+            grid: { left: '2%', right: '4%', bottom: '14%', top: '8%', containLabel: true },
+            xAxis: { type: 'category', data: ['纯云端 API', '混合架构\n(本地+云端Fallback)', '纯本地 7B'], axisLabel: { fontSize: 10, interval: 0 } },
+            yAxis: { type: 'value', axisLabel: { formatter: '¥{value}', fontSize: 10 } },
+            series: [
+                { name: '年运营成本(元)', type: 'bar', data: [8000, 3500, 1500], itemStyle: { color: '#059669', borderRadius: [4, 4, 0, 0] }, label: { show: true, position: 'top', formatter: '¥{c}', fontSize: 10 } },
+                { name: '初始硬件投入(元)', type: 'bar', data: [0, 12000, 8000], itemStyle: { color: '#0369a1', borderRadius: [4, 4, 0, 0] }, label: { show: true, position: 'top', formatter: '¥{c}', fontSize: 10 } }
+            ]
+        }
     }
 ];
 
@@ -125,4 +139,43 @@ if (quizContainer) {
             }
         }
     });
+}
+
+// Multimodal demo interaction
+let demoTimer = null;
+function runMultimodalDemo() {
+    resetMultimodalDemo();
+    const steps = [1, 2, 3, 4];
+    let idx = 0;
+    const bbox = document.getElementById('demo-bbox');
+    const imgPlaceholder = document.getElementById('demo-img-placeholder');
+    if (bbox) bbox.style.display = 'block';
+    if (imgPlaceholder) imgPlaceholder.style.display = 'none';
+    
+    function activateNext() {
+        if (idx > 0) {
+            const prev = document.getElementById('step-' + steps[idx - 1]);
+            if (prev) { prev.classList.remove('active'); prev.classList.add('completed'); }
+        }
+        if (idx < steps.length) {
+            const el = document.getElementById('step-' + steps[idx]);
+            if (el) { el.classList.add('active'); el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+            idx++;
+            demoTimer = setTimeout(activateNext, 1800);
+        } else {
+            demoTimer = null;
+        }
+    }
+    activateNext();
+}
+function resetMultimodalDemo() {
+    if (demoTimer) { clearTimeout(demoTimer); demoTimer = null; }
+    [1, 2, 3, 4].forEach(i => {
+        const el = document.getElementById('step-' + i);
+        if (el) { el.classList.remove('active', 'completed'); }
+    });
+    const bbox = document.getElementById('demo-bbox');
+    const imgPlaceholder = document.getElementById('demo-img-placeholder');
+    if (bbox) bbox.style.display = 'none';
+    if (imgPlaceholder) imgPlaceholder.style.display = 'block';
 }

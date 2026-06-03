@@ -14,6 +14,9 @@
 | 学期 | 课程 | 类型 | 路径 | 技术栈 |
 |------|------|------|------|--------|
 | 2026 Spring | 大数据可视化 | Project | [`projects/bigdata-visualization`](./projects/bigdata-visualization) | Vue 3 + TypeScript + ECharts |
+| 2026 Spring | 课程设计 · Canvas游戏 | Project | [`projects/course-design-canvas-game`](./projects/course-design-canvas-game) | 原生 JavaScript + HTML5 Canvas |
+| 2026 Spring | 课程设计 · Web前端 | Project | [`projects/course-design-web-frontend`](./projects/course-design-web-frontend) | Vue 3 + TS + Pinia + Element Plus |
+| 2026 Spring | 课程设计 · Web Worker | Project | [`projects/vue-web-worker-lab`](./projects/vue-web-worker-lab) | Vue 3 + TS + Web Worker |
 | 2026 Spring | 机器学习 | Project | [`projects/ml-apple-detection`](./projects/ml-apple-detection) | PyTorch + ResNet18 + OpenCV |
 | 2026 Spring | 网络信息安全 | Project | [`projects/network-security`](./projects/network-security) | Kali Linux + nmap + John |
 | 2026 Spring | 遥感图像处理 | Project | [`projects/gis-remote-sensing`](./projects/gis-remote-sensing) | ERDAS 9.2 |
@@ -45,6 +48,24 @@
 | `@student-era/vue-utils` | `packages/@student-era/vue-utils/` | Vue 3 组件（ChartPanel, DataCard）与工具库 |
 
 ## 快速开始
+
+### 课程设计项目（2026 春）
+```bash
+# Canvas 游戏
+cd projects/course-design-canvas-game   # 外部仓库，见 PROJECT_INFO.md
+npx serve --listen 5176 --single
+
+# Web 前端（含学校主页两版本）
+cd projects/course-design-web-frontend    # 外部仓库，见 PROJECT_INFO.md
+pnpm dev                                  # 主项目 Portal + 后台
+# 一键启动全部 5 个演示服务
+cd projects/course-design-web-frontend
+.\start-demo.ps1
+
+# Vue Web Worker 数学实验室
+cd projects/vue-web-worker-lab            # 外部仓库，见 PROJECT_INFO.md
+npm run dev
+```
 
 ### 前端项目
 ```bash
@@ -93,6 +114,9 @@ bash exp2-password-cracking.sh
 │       └── vue-utils/          # Vue 3 组件与工具库
 ├── projects/                   # 课程设计项目
 │   ├── bigdata-visualization/  # Vue 3 数据可视化仪表盘
+│   ├── course-design-canvas-game/  # Canvas 射击游戏（Hero Catch Monster）
+│   ├── course-design-web-frontend/ # Web前端：学校主页 + Portal + 后台管理
+│   ├── vue-web-worker-lab/     # Vue Web Worker 数学计算实验室
 │   ├── ml-apple-detection/     # PyTorch 苹果质量分类
 │   ├── network-security/       # Kali 网络安全实验脚本
 │   ├── gis-remote-sensing/     # ERDAS 遥感图像处理
